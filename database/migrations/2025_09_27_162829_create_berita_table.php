@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('berita', function (Blueprint $table) {
@@ -14,11 +17,14 @@ return new class extends Migration
             $table->text('konten');
             $table->string('gambar')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->boolean('is_published')->default(true);
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('berita');

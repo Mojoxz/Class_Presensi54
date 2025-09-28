@@ -1,4 +1,9 @@
 <?php
+// File ini seharusnya DIHAPUS karena tabel sessions sudah dibuat di 0001_01_01_000000_create_users_table.php
+//
+// HAPUS FILE: database/migrations/2025_09_27_165219_create_sessions_table.php
+//
+// Jika Anda tetap ingin mempertahankan file ini, ubah isinya menjadi:
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,14 +16,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
+        // Tidak melakukan apa-apa karena tabel sessions sudah dibuat sebelumnya
+        // Atau bisa menambahkan kolom baru jika diperlukan
     }
 
     /**
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sessions');
+        // Tidak melakukan apa-apa karena tabel sessions akan dihapus oleh migration utama
     }
 };

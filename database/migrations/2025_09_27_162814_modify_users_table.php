@@ -8,22 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->enum('role', ['admin', 'student'])->default('student');
-            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('cascade');
-            $table->string('nis')->nullable()->unique();
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('role', ['admin', 'student'])->default('student')->after('password');
+            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('cascade')->after('role');
+            $table->string('nis')->nullable()->unique()->after('kelas_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['kelas_id']);
+            $table->dropColumn(['role', 'kelas_id', 'nis']);
+        });
     }
 };
