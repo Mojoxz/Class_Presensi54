@@ -41,6 +41,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('presensi/rekap', [AdminPresensiController::class, 'rekap'])->name('presensi.rekap');
     Route::get('presensi/export', [AdminPresensiController::class, 'export'])->name('presensi.export');
 
+     Route::resource('murid', MuridController::class);
+    Route::post('murid/import', [MuridController::class, 'import'])->name('murid.import');
+
+    // New enhanced routes
+    Route::delete('murid/bulk-delete', [MuridController::class, 'bulkDelete'])->name('murid.bulk-delete');
+    Route::get('murid/export', [MuridController::class, 'export'])->name('murid.export');
+    Route::put('murid/{murid}/reset-password', [MuridController::class, 'resetPassword'])->name('murid.reset-password');
     // Berita Management
     Route::resource('berita', AdminBeritaController::class);
 });
