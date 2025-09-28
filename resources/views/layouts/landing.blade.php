@@ -17,16 +17,41 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="{{ route('landing') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Beranda</a>
-                            <a href="{{ route('tentang') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Tentang</a>
-                            <a href="{{ route('berita.public') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Berita</a>
-                            <a href="{{ route('kontak') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Kontak</a>
+                            <a href="{{ route('landing') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Beranda</a>
+                            <a href="{{ route('tentang') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tentang</a>
+                            <a href="{{ route('berita.public') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Berita</a>
+                            <a href="{{ route('kontak') }}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kontak</a>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('admin.login') }}" class="bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded-md text-sm font-medium">Login Admin</a>
-                    <a href="{{ route('student.login') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium">Login Siswa</a>
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="{{ route('admin.login') }}" class="bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Login Admin</a>
+                        <a href="{{ route('student.login') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Login Siswa</a>
+                    </div>
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" type="button" class="text-white hover:bg-blue-700 p-2 rounded-md" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-blue-700">
+                <a href="{{ route('landing') }}" class="text-white hover:bg-blue-800 block px-3 py-2 rounded-md text-base font-medium">Beranda</a>
+                <a href="{{ route('tentang') }}" class="text-white hover:bg-blue-800 block px-3 py-2 rounded-md text-base font-medium">Tentang</a>
+                <a href="{{ route('berita.public') }}" class="text-white hover:bg-blue-800 block px-3 py-2 rounded-md text-base font-medium">Berita</a>
+                <a href="{{ route('kontak') }}" class="text-white hover:bg-blue-800 block px-3 py-2 rounded-md text-base font-medium">Kontak</a>
+                <div class="border-t border-blue-600 pt-4 pb-3">
+                    <a href="{{ route('admin.login') }}" class="bg-blue-800 hover:bg-blue-900 text-white block px-3 py-2 rounded-md text-base font-medium mb-2">Login Admin</a>
+                    <a href="{{ route('student.login') }}" class="bg-green-600 hover:bg-green-700 text-white block px-3 py-2 rounded-md text-base font-medium">Login Siswa</a>
                 </div>
             </div>
         </div>
@@ -54,9 +79,9 @@
                 <div>
                     <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('tentang') }}" class="text-gray-300 hover:text-white">Tentang Kami</a></li>
-                        <li><a href="{{ route('berita.public') }}" class="text-gray-300 hover:text-white">Berita</a></li>
-                        <li><a href="{{ route('kontak') }}" class="text-gray-300 hover:text-white">Kontak</a></li>
+                        <li><a href="{{ route('tentang') }}" class="text-gray-300 hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="{{ route('berita.public') }}" class="text-gray-300 hover:text-white transition-colors">Berita</a></li>
+                        <li><a href="{{ route('kontak') }}" class="text-gray-300 hover:text-white transition-colors">Kontak</a></li>
                     </ul>
                 </div>
             </div>
@@ -65,5 +90,24 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

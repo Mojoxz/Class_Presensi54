@@ -19,21 +19,6 @@
                    class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
         </div>
 
-        <!-- Pagination -->
-        <div class="px-6 py-3 border-t border-gray-200">
-            {{ $presensi->withQueryString()->links() }}
-        </div>
-    @else
-        <div class="text-center py-12">
-            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-            </svg>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data presensi</h3>
-            <p class="text-gray-500">Tidak ada data presensi untuk filter yang dipilih</p>
-        </div>
-    @endif
-</div>
-@endsection
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
             <select name="kelas_id" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
@@ -45,6 +30,7 @@
                 @endforeach
             </select>
         </div>
+
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
             <select name="status" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
@@ -55,6 +41,7 @@
                 <option value="sakit" {{ request('status') == 'sakit' ? 'selected' : '' }}>Sakit</option>
             </select>
         </div>
+
         <div class="flex items-end">
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mr-2">
                 Filter
@@ -116,3 +103,22 @@
                             </td>
                         </tr>
                     @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-3 border-t border-gray-200">
+            {{ $presensi->withQueryString()->links() }}
+        </div>
+    @else
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data presensi</h3>
+            <p class="text-gray-500">Tidak ada data presensi untuk filter yang dipilih</p>
+        </div>
+    @endif
+</div>
+@endsection
