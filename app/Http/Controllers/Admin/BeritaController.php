@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class BeritaController extends Controller
 {
@@ -36,14 +36,25 @@ class BeritaController extends Controller
 
         if ($request->hasFile('gambar')) {
             $image = $request->file('gambar');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
-            // Resize image
-            $img = Image::make($image->path());
-            $img->resize(800, 600, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->save(public_path('storage/berita/' . $filename));
+            // Pastikan direktori ada
+            $path = public_path('storage/berita');
+            if (!File::exists($path)) {
+                File::makeDirectory($path, 0755, true);
+            }
+
+            // Cek apakah Intervention Image tersedia
+            if (class_exists('Intervention\Image\Facades\Image')) {
+                $img = \Intervention\Image\Facades\Image::make($image->getRealPath());
+                $img->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->save($path . '/' . $filename);
+            } else {
+                // Fallback jika Intervention Image tidak tersedia
+                $image->move($path, $filename);
+            }
 
             $data['gambar'] = 'berita/' . $filename;
         }
@@ -56,6 +67,7 @@ class BeritaController extends Controller
 
     public function show(Berita $berita)
     {
+        $berita->load('user');
         return view('admin.berita.show', compact('berita'));
     }
 
@@ -77,20 +89,34 @@ class BeritaController extends Controller
         $data['is_published'] = $request->has('is_published');
 
         if ($request->hasFile('gambar')) {
-            // Delete old image
-            if ($berita->gambar && Storage::exists('public/' . $berita->gambar)) {
-                Storage::delete('public/' . $berita->gambar);
+            // Hapus gambar lama
+            if ($berita->gambar) {
+                $oldImagePath = public_path('storage/' . $berita->gambar);
+                if (File::exists($oldImagePath)) {
+                    File::delete($oldImagePath);
+                }
             }
 
             $image = $request->file('gambar');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
-            // Resize image
-            $img = Image::make($image->path());
-            $img->resize(800, 600, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->save(public_path('storage/berita/' . $filename));
+            // Pastikan direktori ada
+            $path = public_path('storage/berita');
+            if (!File::exists($path)) {
+                File::makeDirectory($path, 0755, true);
+            }
+
+            // Cek apakah Intervention Image tersedia
+            if (class_exists('Intervention\Image\Facades\Image')) {
+                $img = \Intervention\Image\Facades\Image::make($image->getRealPath());
+                $img->resize(800, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->save($path . '/' . $filename);
+            } else {
+                // Fallback jika Intervention Image tidak tersedia
+                $image->move($path, $filename);
+            }
 
             $data['gambar'] = 'berita/' . $filename;
         }
@@ -103,8 +129,11 @@ class BeritaController extends Controller
 
     public function destroy(Berita $berita)
     {
-        if ($berita->gambar && Storage::exists('public/' . $berita->gambar)) {
-            Storage::delete('public/' . $berita->gambar);
+        if ($berita->gambar) {
+            $imagePath = public_path('storage/' . $berita->gambar);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
         }
 
         $berita->delete();
