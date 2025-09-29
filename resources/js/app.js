@@ -5,91 +5,93 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 Alpine.start();
 
-// Custom JavaScript untuk SMP 54 Surabaya
+// Modern SMP 54 Surabaya JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components
-    initializeComponents();
+    initializeApp();
+});
+
+// Main Initialization
+function initializeApp() {
+    initializeAnimations();
     initializeDateTime();
     initializeNotifications();
     initializeModal();
-    initializeTable();
-    initializeForm();
-});
-
-// Component Initialization
-function initializeComponents() {
-    // Auto-hide alerts after 5 seconds
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            if (alert && alert.parentNode) {
-                alert.style.transition = 'opacity 0.5s ease-out';
-                alert.style.opacity = '0';
-                setTimeout(() => {
-                    if (alert.parentNode) {
-                        alert.parentNode.removeChild(alert);
-                    }
-                }, 500);
-            }
-        }, 5000);
-    });
-
-    // Initialize tooltips
-    initializeTooltips();
-
-    // Initialize mobile menu
-    initializeMobileMenu();
-
-    // Initialize loading states
-    initializeLoadingStates();
+    initializeForms();
+    initializeNavigation();
+    initializeLazyLoading();
 }
 
-// Date Time Functions
-function initializeDateTime() {
-    // Update all datetime elements
-    updateDateTime();
+// Smooth Scroll & Intersection Observer Animations
+function initializeAnimations() {
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
 
-    // Update every second
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-up');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements with animation class
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// DateTime Functions
+function initializeDateTime() {
+    updateDateTime();
     setInterval(updateDateTime, 1000);
 }
 
 function updateDateTime() {
     const now = new Date();
-
-    // Update elements with specific IDs
-    const timeElements = {
-        'current-time': now.toLocaleTimeString('id-ID'),
-        'current-date': now.toLocaleDateString('id-ID', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        }),
-        'current-time-home': now.toLocaleDateString('id-ID', {
-            weekday: 'long',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        }),
-        'datetime': now.toLocaleDateString('id-ID', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        })
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
     };
 
-    Object.keys(timeElements).forEach(id => {
+    // Update elements with datetime IDs
+    const dateTimeElements = {
+        'current-time': now.toLocaleTimeString('id-ID'),
+        'current-date': now.toLocaleDateString('id-ID', options),
+        'datetime': now.toLocaleDateString('id-ID', options)
+    };
+
+    Object.entries(dateTimeElements).forEach(([id, value]) => {
         const element = document.getElementById(id);
-        if (element) {
-            element.textContent = timeElements[id];
-        }
+        if (element) element.textContent = value;
     });
 
-    // Update all elements with data-datetime attribute
+    // Update elements with data-datetime attribute
     document.querySelectorAll('[data-datetime]').forEach(element => {
         const format = element.getAttribute('data-datetime');
         element.textContent = formatDateTime(now, format);
@@ -97,262 +99,152 @@ function updateDateTime() {
 }
 
 function formatDateTime(date, format) {
-    const options = {};
+    const options = {
+        time: { hour: '2-digit', minute: '2-digit' },
+        date: { year: 'numeric', month: 'long', day: 'numeric' },
+        datetime: { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' },
+        full: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }
+    };
 
-    switch(format) {
-        case 'time':
-            return date.toLocaleTimeString('id-ID');
-        case 'date':
-            return date.toLocaleDateString('id-ID');
-        case 'datetime':
-            return date.toLocaleDateString('id-ID', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        case 'full':
-            return date.toLocaleDateString('id-ID', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-        default:
-            return date.toLocaleDateString('id-ID');
-    }
+    return date.toLocaleString('id-ID', options[format] || {});
 }
 
-// Notification System
+// Modern Notification System
 function initializeNotifications() {
-    // Show notifications with animation
-    const notifications = document.querySelectorAll('.notification');
-    notifications.forEach((notification, index) => {
-        setTimeout(() => {
-            notification.classList.add('notification-enter-active');
-        }, index * 100);
-
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-            hideNotification(notification);
-        }, 5000);
+    // Auto-hide alerts
+    document.querySelectorAll('.alert').forEach(alert => {
+        setTimeout(() => hideElement(alert), 5000);
     });
 }
 
 function showNotification(message, type = 'info', duration = 5000) {
-    const notification = document.createElement('div');
-    notification.className = `notification alert alert-${type} fixed top-4 right-4 z-50 max-w-sm`;
-    notification.innerHTML = `
-        <div class="flex items-center justify-between">
-            <span>${message}</span>
-            <button onclick="hideNotification(this.parentElement.parentElement)" class="ml-4 text-gray-400 hover:text-gray-600">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-    `;
-
+    const notification = createNotification(message, type);
     document.body.appendChild(notification);
 
-    // Show with animation
-    setTimeout(() => {
-        notification.classList.add('notification-enter-active');
-    }, 10);
+    // Trigger animation
+    setTimeout(() => notification.classList.add('notification-enter-active'), 10);
 
     // Auto-hide
     if (duration > 0) {
-        setTimeout(() => {
-            hideNotification(notification);
-        }, duration);
+        setTimeout(() => hideNotification(notification), duration);
     }
+
+    return notification;
+}
+
+function createNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification fixed top-4 right-4 z-50 max-w-sm notification-enter`;
+
+    const typeClasses = {
+        success: 'bg-green-50 border-green-200 text-green-800',
+        error: 'bg-red-50 border-red-200 text-red-800',
+        warning: 'bg-amber-50 border-amber-200 text-amber-800',
+        info: 'bg-blue-50 border-blue-200 text-blue-800'
+    };
+
+    notification.innerHTML = `
+        <div class="px-4 py-3 rounded-lg border ${typeClasses[type] || typeClasses.info}">
+            <div class="flex items-start justify-between">
+                <span class="flex-1">${message}</span>
+                <button onclick="window.SMP54.hideNotification(this.closest('.notification'))"
+                        class="ml-4 text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `;
 
     return notification;
 }
 
 function hideNotification(notification) {
     if (!notification) return;
-
+    notification.classList.remove('notification-enter-active');
     notification.classList.add('notification-exit-active');
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 300);
+    setTimeout(() => notification.remove(), 300);
+}
+
+function hideElement(element) {
+    if (!element) return;
+    element.style.transition = 'opacity 0.3s ease-out';
+    element.style.opacity = '0';
+    setTimeout(() => element.remove(), 300);
 }
 
 // Modal Functions
 function initializeModal() {
-    // Close modal when clicking outside
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('modal-backdrop')) {
-            closeModal(e.target.closest('.modal'));
+    // Close modal on backdrop click
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+            closeModal(e.target.nextElementSibling);
         }
     });
 
     // Close modal with ESC key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             const openModal = document.querySelector('.modal:not(.hidden)');
-            if (openModal) {
-                closeModal(openModal);
-            }
+            if (openModal) closeModal(openModal);
         }
     });
 }
 
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+    if (!modal) return;
 
-        // Focus trap
-        const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        if (focusableElements.length > 0) {
-            focusableElements[0].focus();
-        }
-    }
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+
+    // Focus first focusable element
+    const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusable) setTimeout(() => focusable.focus(), 100);
 }
 
 function closeModal(modal) {
     if (!modal) return;
-
     modal.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 }
 
-// Table Functions
-function initializeTable() {
-    // Initialize sortable tables
-    document.querySelectorAll('.sortable-table').forEach(table => {
-        const headers = table.querySelectorAll('th[data-sort]');
-        headers.forEach(header => {
-            header.style.cursor = 'pointer';
-            header.addEventListener('click', () => sortTable(table, header.dataset.sort));
-        });
-    });
-
-    // Initialize searchable tables
-    document.querySelectorAll('.searchable-table').forEach(table => {
-        const searchInput = table.previousElementSibling?.querySelector('input[data-search]');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => filterTable(table, e.target.value));
-        }
-    });
-}
-
-function sortTable(table, column) {
-    const tbody = table.querySelector('tbody');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    const headerCell = table.querySelector(`th[data-sort="${column}"]`);
-    const isAscending = !headerCell.classList.contains('sort-asc');
-
-    // Remove all sort classes
-    table.querySelectorAll('th').forEach(th => {
-        th.classList.remove('sort-asc', 'sort-desc');
-    });
-
-    // Add sort class to current header
-    headerCell.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
-
-    const columnIndex = Array.from(headerCell.parentNode.children).indexOf(headerCell);
-
-    rows.sort((a, b) => {
-        const aVal = a.children[columnIndex]?.textContent?.trim() || '';
-        const bVal = b.children[columnIndex]?.textContent?.trim() || '';
-
-        // Try to parse as numbers
-        const aNum = parseFloat(aVal);
-        const bNum = parseFloat(bVal);
-
-        if (!isNaN(aNum) && !isNaN(bNum)) {
-            return isAscending ? aNum - bNum : bNum - aNum;
-        }
-
-        // String comparison
-        return isAscending
-            ? aVal.localeCompare(bVal, 'id-ID')
-            : bVal.localeCompare(aVal, 'id-ID');
-    });
-
-    // Reappend sorted rows
-    rows.forEach(row => tbody.appendChild(row));
-}
-
-function filterTable(table, searchTerm) {
-    const tbody = table.querySelector('tbody');
-    const rows = tbody.querySelectorAll('tr');
-    const term = searchTerm.toLowerCase();
-
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(term) ? '' : 'none';
-    });
-}
-
 // Form Functions
-function initializeForm() {
-    // Auto-save form data to localStorage (if supported)
-    document.querySelectorAll('form[data-auto-save]').forEach(form => {
-        const formId = form.dataset.autoSave;
-        loadFormData(form, formId);
-
-        form.addEventListener('input', () => {
-            saveFormData(form, formId);
-        });
-    });
-
-    // Form validation
+function initializeForms() {
+    // Form submission with loading state
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', handleFormSubmit);
     });
 
     // Real-time validation
-    document.querySelectorAll('input[data-validate], select[data-validate], textarea[data-validate]').forEach(input => {
+    document.querySelectorAll('[data-validate]').forEach(input => {
         input.addEventListener('blur', () => validateField(input));
         input.addEventListener('input', () => clearFieldError(input));
     });
 }
 
-function saveFormData(form, formId) {
-    if (!window.localStorage) return;
+function handleFormSubmit(e) {
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-    const data = new FormData(form);
-    const formData = {};
+    if (submitBtn && !submitBtn.disabled) {
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+            <div class="flex items-center justify-center">
+                <div class="spinner spinner-sm border-white mr-2"></div>
+                <span>Processing...</span>
+            </div>
+        `;
 
-    for (let [key, value] of data.entries()) {
-        formData[key] = value;
-    }
-
-    try {
-        localStorage.setItem(`form-${formId}`, JSON.stringify(formData));
-    } catch (e) {
-        console.warn('Could not save form data:', e);
-    }
-}
-
-function loadFormData(form, formId) {
-    if (!window.localStorage) return;
-
-    try {
-        const saved = localStorage.getItem(`form-${formId}`);
-        if (saved) {
-            const formData = JSON.parse(saved);
-
-            Object.keys(formData).forEach(key => {
-                const field = form.querySelector(`[name="${key}"]`);
-                if (field) {
-                    field.value = formData[key];
-                }
-            });
-        }
-    } catch (e) {
-        console.warn('Could not load form data:', e);
+        // Reset after 5 seconds (fallback)
+        setTimeout(() => {
+            if (submitBtn.disabled) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+            }
+        }, 5000);
     }
 }
 
@@ -362,235 +254,139 @@ function validateField(field) {
     let isValid = true;
     let message = '';
 
-    switch (validationType) {
-        case 'required':
+    const validators = {
+        required: () => {
             isValid = value.length > 0;
             message = 'Field ini wajib diisi';
-            break;
-        case 'email':
-            isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || value === '';
+        },
+        email: () => {
+            isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || !value;
             message = 'Format email tidak valid';
-            break;
-        case 'phone':
-            isValid = /^[\d\-\+\(\)\s]+$/.test(value) || value === '';
+        },
+        phone: () => {
+            isValid = /^[\d\-\+\(\)\s]+$/.test(value) || !value;
             message = 'Format nomor telepon tidak valid';
-            break;
-        case 'number':
-            isValid = !isNaN(parseFloat(value)) || value === '';
+        },
+        number: () => {
+            isValid = !isNaN(parseFloat(value)) || !value;
             message = 'Harus berupa angka';
-            break;
-        case 'min-length':
-            const minLength = parseInt(field.dataset.minLength) || 0;
-            isValid = value.length >= minLength || value === '';
-            message = `Minimal ${minLength} karakter`;
-            break;
+        }
+    };
+
+    if (validators[validationType]) {
+        validators[validationType]();
     }
 
-    if (!isValid) {
-        showFieldError(field, message);
-    } else {
-        clearFieldError(field);
-    }
-
+    isValid ? clearFieldError(field) : showFieldError(field, message);
     return isValid;
 }
 
 function showFieldError(field, message) {
     clearFieldError(field);
-
-    field.classList.add('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+    field.classList.add('border-red-500', 'focus:ring-red-500');
 
     const errorDiv = document.createElement('div');
-    errorDiv.className = 'field-error text-red-500 text-xs mt-1';
+    errorDiv.className = 'field-error text-red-500 text-sm mt-1';
     errorDiv.textContent = message;
-
     field.parentNode.appendChild(errorDiv);
 }
 
 function clearFieldError(field) {
-    field.classList.remove('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
-
-    const existingError = field.parentNode.querySelector('.field-error');
-    if (existingError) {
-        existingError.remove();
-    }
+    field.classList.remove('border-red-500', 'focus:ring-red-500');
+    const error = field.parentNode.querySelector('.field-error');
+    if (error) error.remove();
 }
 
-function handleFormSubmit(e) {
-    const form = e.target;
-    const submitButton = form.querySelector('button[type="submit"]');
+// Navigation Functions
+function initializeNavigation() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
 
-    // Show loading state
-    if (submitButton) {
-        const originalText = submitButton.textContent;
-        submitButton.disabled = true;
-        submitButton.innerHTML = `
-            <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Processing...
-        `;
-
-        // Reset button after 5 seconds (fallback)
-        setTimeout(() => {
-            if (submitButton.disabled) {
-                submitButton.disabled = false;
-                submitButton.textContent = originalText;
-            }
-        }, 5000);
-    }
-}
-
-// Tooltip Functions
-function initializeTooltips() {
-    document.querySelectorAll('[data-tooltip]').forEach(element => {
-        element.addEventListener('mouseenter', showTooltip);
-        element.addEventListener('mouseleave', hideTooltip);
-        element.addEventListener('focus', showTooltip);
-        element.addEventListener('blur', hideTooltip);
-    });
-}
-
-function showTooltip(e) {
-    const element = e.target;
-    const text = element.dataset.tooltip;
-    const position = element.dataset.tooltipPosition || 'top';
-
-    if (!text) return;
-
-    const tooltip = document.createElement('div');
-    tooltip.className = `tooltip absolute z-50 px-2 py-1 text-sm text-white bg-gray-900 rounded shadow-lg pointer-events-none`;
-    tooltip.textContent = text;
-    tooltip.id = 'tooltip-' + Date.now();
-
-    document.body.appendChild(tooltip);
-
-    const rect = element.getBoundingClientRect();
-    const tooltipRect = tooltip.getBoundingClientRect();
-
-    let top, left;
-
-    switch (position) {
-        case 'top':
-            top = rect.top - tooltipRect.height - 8;
-            left = rect.left + (rect.width - tooltipRect.width) / 2;
-            break;
-        case 'bottom':
-            top = rect.bottom + 8;
-            left = rect.left + (rect.width - tooltipRect.width) / 2;
-            break;
-        case 'left':
-            top = rect.top + (rect.height - tooltipRect.height) / 2;
-            left = rect.left - tooltipRect.width - 8;
-            break;
-        case 'right':
-            top = rect.top + (rect.height - tooltipRect.height) / 2;
-            left = rect.right + 8;
-            break;
-        default:
-            top = rect.top - tooltipRect.height - 8;
-            left = rect.left + (rect.width - tooltipRect.width) / 2;
-    }
-
-    // Keep tooltip within viewport
-    if (left < 8) left = 8;
-    if (left + tooltipRect.width > window.innerWidth - 8) {
-        left = window.innerWidth - tooltipRect.width - 8;
-    }
-    if (top < 8) top = rect.bottom + 8;
-
-    tooltip.style.top = top + window.scrollY + 'px';
-    tooltip.style.left = left + 'px';
-
-    element._tooltip = tooltip;
-}
-
-function hideTooltip(e) {
-    const element = e.target;
-    if (element._tooltip) {
-        element._tooltip.remove();
-        element._tooltip = null;
-    }
-}
-
-// Mobile Menu
-function initializeMobileMenu() {
-    const mobileMenuButton = document.querySelector('[data-mobile-menu-button]');
-    const mobileMenu = document.querySelector('[data-mobile-menu]');
-
-    if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-            const isOpen = !mobileMenu.classList.contains('hidden');
-
-            if (isOpen) {
-                mobileMenu.classList.add('hidden');
-                mobileMenuButton.setAttribute('aria-expanded', 'false');
-            } else {
-                mobileMenu.classList.remove('hidden');
-                mobileMenuButton.setAttribute('aria-expanded', 'true');
-            }
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
 
-        // Close mobile menu when clicking outside
+        // Close on outside click
         document.addEventListener('click', (e) => {
-            if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
                 mobileMenu.classList.add('hidden');
-                mobileMenuButton.setAttribute('aria-expanded', 'false');
             }
         });
     }
+
+    // Active link highlighting
+    highlightActiveLink();
+
+    // Sticky header effect
+    initializeStickyHeader();
 }
 
-// Loading States
-function initializeLoadingStates() {
-    // Add loading state to links with data-loading attribute
-    document.querySelectorAll('a[data-loading]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            if (!e.target.href || e.target.href === '#') return;
-
-            showPageLoading();
-        });
+function highlightActiveLink() {
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+            link.classList.add('nav-link-active');
+        }
     });
 }
 
-function showPageLoading() {
-    const loader = document.createElement('div');
-    loader.id = 'page-loader';
-    loader.className = 'fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50';
-    loader.innerHTML = `
-        <div class="text-center">
-            <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-gray-600">Loading...</p>
-        </div>
-    `;
+function initializeStickyHeader() {
+    const header = document.querySelector('nav');
+    if (!header) return;
 
-    document.body.appendChild(loader);
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 100) {
+            header.classList.add('shadow-md');
+        } else {
+            header.classList.remove('shadow-md');
+        }
+
+        lastScroll = currentScroll;
+    });
 }
 
-function hidePageLoading() {
-    const loader = document.getElementById('page-loader');
-    if (loader) {
-        loader.remove();
+// Lazy Loading Images
+function initializeLazyLoading() {
+    if ('loading' in HTMLImageElement.prototype) {
+        // Native lazy loading
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+        });
+    } else {
+        // Fallback to Intersection Observer
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+        });
     }
 }
 
 // Utility Functions
-function debounce(func, wait, immediate) {
+const debounce = (func, wait) => {
     let timeout;
     return function executedFunction(...args) {
-        const later = () => {
-            timeout = null;
-            if (!immediate) func(...args);
-        };
-        const callNow = immediate && !timeout;
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func(...args);
+        timeout = setTimeout(() => func(...args), wait);
     };
-}
+};
 
-function throttle(func, limit) {
+const throttle = (func, limit) => {
     let inThrottle;
     return function(...args) {
         if (!inThrottle) {
@@ -599,7 +395,7 @@ function throttle(func, limit) {
             setTimeout(() => inThrottle = false, limit);
         }
     };
-}
+};
 
 function formatNumber(num, locale = 'id-ID') {
     return new Intl.NumberFormat(locale).format(num);
@@ -635,29 +431,260 @@ function getTimeAgo(date) {
     return 'Baru saja';
 }
 
+// Loading Functions
+function showPageLoading() {
+    const loader = document.createElement('div');
+    loader.id = 'page-loader';
+    loader.className = 'fixed inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-50';
+    loader.innerHTML = `
+        <div class="text-center">
+            <div class="spinner spinner-lg mb-4 mx-auto"></div>
+            <p class="text-gray-600 font-medium">Loading...</p>
+        </div>
+    `;
+    document.body.appendChild(loader);
+}
+
+function hidePageLoading() {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 300);
+    }
+}
+
+// Copy to Clipboard
+function copyToClipboard(text) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+            showNotification('Berhasil disalin!', 'success', 2000);
+        }).catch(() => {
+            showNotification('Gagal menyalin', 'error', 2000);
+        });
+    } else {
+        // Fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showNotification('Berhasil disalin!', 'success', 2000);
+        } catch (err) {
+            showNotification('Gagal menyalin', 'error', 2000);
+        }
+        document.body.removeChild(textarea);
+    }
+}
+
+// Scroll to Top Function
+function scrollToTop(smooth = true) {
+    window.scrollTo({
+        top: 0,
+        behavior: smooth ? 'smooth' : 'auto'
+    });
+}
+
+// Show Scroll to Top Button
+function initializeScrollToTop() {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (!scrollBtn) return;
+
+    window.addEventListener('scroll', throttle(() => {
+        if (window.pageYOffset > 300) {
+            scrollBtn.classList.remove('hidden');
+        } else {
+            scrollBtn.classList.add('hidden');
+        }
+    }, 200));
+
+    scrollBtn.addEventListener('click', () => scrollToTop());
+}
+
+// Table Functions
+function sortTable(table, column, direction = 'asc') {
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const columnIndex = column;
+
+    rows.sort((a, b) => {
+        const aValue = a.children[columnIndex]?.textContent?.trim() || '';
+        const bValue = b.children[columnIndex]?.textContent?.trim() || '';
+
+        // Try numeric comparison
+        const aNum = parseFloat(aValue);
+        const bNum = parseFloat(bValue);
+
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+            return direction === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+
+        // String comparison
+        return direction === 'asc'
+            ? aValue.localeCompare(bValue, 'id-ID')
+            : bValue.localeCompare(aValue, 'id-ID');
+    });
+
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+function filterTable(table, searchTerm) {
+    const tbody = table.querySelector('tbody');
+    const rows = tbody.querySelectorAll('tr');
+    const term = searchTerm.toLowerCase();
+
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+    });
+}
+
+// Tooltip System
+function initializeTooltips() {
+    document.querySelectorAll('[data-tooltip]').forEach(element => {
+        element.addEventListener('mouseenter', showTooltip);
+        element.addEventListener('mouseleave', hideTooltip);
+    });
+}
+
+function showTooltip(e) {
+    const element = e.target;
+    const text = element.dataset.tooltip;
+    if (!text) return;
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'fixed z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg pointer-events-none';
+    tooltip.textContent = text;
+    tooltip.id = 'tooltip-' + Date.now();
+
+    document.body.appendChild(tooltip);
+
+    const rect = element.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    tooltip.style.top = (rect.top - tooltipRect.height - 8) + 'px';
+    tooltip.style.left = (rect.left + (rect.width - tooltipRect.width) / 2) + 'px';
+
+    element._tooltip = tooltip;
+}
+
+function hideTooltip(e) {
+    const element = e.target;
+    if (element._tooltip) {
+        element._tooltip.remove();
+        element._tooltip = null;
+    }
+}
+
 // Chart Helper (if using Chart.js)
 function createChart(canvasId, type, data, options = {}) {
-    const ctx = document.getElementById(canvasId);
-    if (!ctx || typeof Chart === 'undefined') return null;
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || typeof Chart === 'undefined') return null;
 
     const defaultOptions = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                position: 'bottom'
+                position: 'bottom',
+                labels: {
+                    padding: 15,
+                    usePointStyle: true
+                }
             }
         }
     };
 
-    return new Chart(ctx, {
+    return new Chart(canvas, {
         type: type,
         data: data,
         options: { ...defaultOptions, ...options }
     });
 }
 
-// Export functions for global use
+// Export to CSV
+function exportToCSV(data, filename = 'export.csv') {
+    const csv = data.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// Print Function
+function printPage() {
+    window.print();
+}
+
+// Confirm Dialog
+function confirmDialog(message, onConfirm, onCancel) {
+    const dialog = document.createElement('div');
+    dialog.className = 'fixed inset-0 z-50 flex items-center justify-center';
+    dialog.innerHTML = `
+        <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50"></div>
+        <div class="modal-content relative bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Konfirmasi</h3>
+            <p class="text-gray-600 mb-6">${message}</p>
+            <div class="flex gap-3 justify-end">
+                <button class="btn-secondary btn-sm" data-action="cancel">Batal</button>
+                <button class="btn-primary btn-sm" data-action="confirm">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+
+    dialog.querySelector('[data-action="confirm"]').addEventListener('click', () => {
+        if (onConfirm) onConfirm();
+        dialog.remove();
+    });
+
+    dialog.querySelector('[data-action="cancel"]').addEventListener('click', () => {
+        if (onCancel) onCancel();
+        dialog.remove();
+    });
+
+    dialog.querySelector('.modal-overlay').addEventListener('click', () => {
+        if (onCancel) onCancel();
+        dialog.remove();
+    });
+}
+
+// Local Storage Helper
+function saveToStorage(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+        return true;
+    } catch (e) {
+        console.warn('Could not save to localStorage:', e);
+        return false;
+    }
+}
+
+function getFromStorage(key, defaultValue = null) {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : defaultValue;
+    } catch (e) {
+        console.warn('Could not read from localStorage:', e);
+        return defaultValue;
+    }
+}
+
+function removeFromStorage(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (e) {
+        console.warn('Could not remove from localStorage:', e);
+        return false;
+    }
+}
+
+// Export all functions as SMP54 namespace
 window.SMP54 = {
     // Notification functions
     showNotification,
@@ -678,24 +705,37 @@ window.SMP54 = {
     formatNumber,
     formatCurrency,
     getTimeAgo,
+    copyToClipboard,
+    scrollToTop,
 
     // Loading functions
     showPageLoading,
     hidePageLoading,
 
+    // Table functions
+    sortTable,
+    filterTable,
+
     // Chart function
-    createChart
+    createChart,
+
+    // Export functions
+    exportToCSV,
+    printPage,
+
+    // Dialog functions
+    confirmDialog,
+
+    // Storage functions
+    saveToStorage,
+    getFromStorage,
+    removeFromStorage
 };
 
-// Service Worker Registration (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-                console.log('SW registered: ', registration);
-            })
-            .catch((registrationError) => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
+// Initialize scroll to top button
+initializeScrollToTop();
+
+// Initialize tooltips
+initializeTooltips();
+
+console.log('SMP 54 Surabaya - System Initialized ✓');
