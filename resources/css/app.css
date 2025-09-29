@@ -510,3 +510,59 @@
 .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
+
+/* Wide Container for Landing Page */
+.container-wide {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+    .container-wide {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container-wide {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
+
+/* Gradient Text Global */
+.gradient-text {
+    @apply bg-gradient-to-r from-purple-600 via-purple-700 to-amber-500 bg-clip-text text-transparent;
+}
+
+/* Smooth Transitions */
+* {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prevent flash of unstyled content */
+.no-js {
+    opacity: 0;
+}
+
+.js-loaded {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Image Loading State */
+img {
+    transition: opacity 0.3s ease;
+}
+
+img[data-src] {
+    opacity: 0;
+}
+
+img.loaded {
+    opacity: 1;
+}

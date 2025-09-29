@@ -9,10 +9,10 @@
 <body class="bg-white antialiased">
     <!-- Modern Navigation -->
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-        <div class="container-custom">
-            <div class="flex items-center justify-between h-20">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12">
+            <div class="flex items-center h-20">
                 <!-- Logo -->
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 mr-8">
                     <div class="logo-circle">
                         <span class="text-xl font-bold gradient-text">54</span>
                     </div>
@@ -22,8 +22,8 @@
                     </div>
                 </div>
 
-                <!-- Desktop Navigation -->
-                <div class="hidden lg:flex items-center space-x-1">
+                <!-- Desktop Navigation - Moved to Left -->
+                <div class="hidden lg:flex items-center space-x-1 flex-1">
                     <a href="{{ route('landing') }}" class="nav-link {{ request()->routeIs('landing') ? 'nav-link-active' : '' }}">
                         Beranda
                     </a>
@@ -38,8 +38,8 @@
                     </a>
                 </div>
 
-                <!-- CTA Buttons -->
-                <div class="hidden lg:flex items-center space-x-3">
+                <!-- CTA Buttons - Now on the Right -->
+                <div class="hidden lg:flex items-center space-x-3 ml-auto">
                     <!-- <a href="{{ route('admin.login') }}" class="text-sm font-medium text-gray-700 hover:text-purple-600 px-4 py-2 rounded-lg transition-colors">
                         Admin
                     </a> -->
@@ -52,7 +52,7 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors ml-auto">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                         <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -108,9 +108,9 @@
 
                 <!-- Mobile CTA Buttons -->
                 <div class="space-y-3 pt-6 border-t border-gray-200">
-                    <a href="{{ route('admin.login') }}" class="mobile-btn-secondary">
+                    <!-- <a href="{{ route('admin.login') }}" class="mobile-btn-secondary">
                         Login Admin
-                    </a>
+                    </a> -->
                     <a href="{{ route('student.login') }}" class="mobile-btn-primary">
                         Portal Siswa
                     </a>
@@ -128,7 +128,7 @@
     <footer class="bg-gray-900 text-gray-300 relative overflow-hidden">
         <div class="footer-pattern"></div>
 
-        <div class="container-custom relative z-10">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
             <!-- Main Footer Content -->
             <div class="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                 <!-- About Column -->
@@ -177,7 +177,7 @@
                 <div>
                     <h3 class="text-white font-semibold mb-6">Portal</h3>
                     <ul class="space-y-3">
-                        <li><a href="{{ route('admin.login') }}" class="footer-link">Login Admin</a></li>
+                        <!-- <li><a href="{{ route('admin.login') }}" class="footer-link">Login Admin</a></li> -->
                         <li><a href="{{ route('student.login') }}" class="footer-link">Login Siswa</a></li>
                     </ul>
                 </div>
