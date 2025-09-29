@@ -41,7 +41,7 @@
             @error('gambar')
                 <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
             @enderror
-            <p class="text-gray-600 text-xs italic mt-1">Format: JPEG, PNG, JPG, GIF. Maksimal 2MB. Kosongkan jika tidak ingin mengubah gambar.</p>
+            <p class="text-gray-600 text-xs italic mt-1">Format: JPEG, PNG, JPG, GIF. Maksimal 10MB. Kosongkan jika tidak ingin mengubah gambar.</p>
         </div>
 
         <div class="mb-6">
