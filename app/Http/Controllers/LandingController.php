@@ -26,7 +26,7 @@ class LandingController extends Controller
     {
         $berita = Berita::where('is_published', true)
                        ->latest()
-                       ->paginate(6);
+                       ->paginate(7);
 
         return view('landing.berita', compact('berita'));
     }

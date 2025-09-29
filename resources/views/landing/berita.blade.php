@@ -133,7 +133,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @foreach($berita->skip(1) as $index => $item)
+                    @foreach($berita->skip(1)  as $index => $item)
                         <article class="news-card group animate-on-scroll" style="animation-delay: {{ ($index % 3) * 0.1 }}s;">
                             <div class="news-image-wrapper">
                                 @if($item->gambar)
@@ -168,13 +168,74 @@
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="flex justify-center animate-on-scroll">
-                <div class="pagination-wrapper">
-                    {{ $berita->links() }}
-                </div>
+<div class="flex justify-center animate-on-scroll">
+    @if($berita->hasPages())
+        <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-center gap-4 flex-wrap">
+            {{-- Previous Page Link --}}
+            @if ($berita->onFirstPage())
+                <span class="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg text-gray-400 bg-gray-100 rounded-xl cursor-not-allowed font-semibold transition-all duration-300">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    <span class="hidden sm:inline">Sebelumnya</span>
+                    <span class="sm:hidden">Prev</span>
+                </span>
+            @else
+                <a href="{{ $berita->previousPageUrl() }}" class="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg text-purple-700 bg-white border-2 border-purple-200 rounded-xl hover:bg-purple-50 hover:border-purple-400 transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-semibold group">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    <span class="hidden sm:inline">Sebelumnya</span>
+                    <span class="sm:hidden">Prev</span>
+                </a>
+            @endif
+
+            {{-- Page Numbers - Desktop Only --}}
+            <div class="hidden md:flex items-center gap-3">
+                @for ($i = 1; $i <= $berita->lastPage(); $i++)
+                    @if ($i == $berita->currentPage())
+                        <span class="min-w-[52px] px-5 py-4 text-center text-lg text-white font-bold rounded-xl shadow-lg transition-all duration-300" style="background: linear-gradient(135deg, #9333ea 0%, #7c3aed 50%, #f59e0b 100%);">
+                            {{ $i }}
+                        </span>
+                    @elseif ($i == 1 || $i == $berita->lastPage() || ($i >= $berita->currentPage() - 1 && $i <= $berita->currentPage() + 1))
+                        <a href="{{ $berita->url($i) }}" class="min-w-[52px] px-5 py-4 text-center text-lg text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition-all duration-300 transform hover:scale-110 hover:shadow-md font-semibold">
+                            {{ $i }}
+                        </a>
+                    @elseif ($i == $berita->currentPage() - 2 || $i == $berita->currentPage() + 2)
+                        <span class="px-3 py-2 text-gray-500 font-semibold text-lg">...</span>
+                    @endif
+                @endfor
             </div>
-        @else
+
+            {{-- Mobile: Current Page Indicator --}}
+            <div class="md:hidden flex items-center gap-2 px-5 py-3 bg-white border-2 border-gray-200 rounded-xl shadow-sm">
+                <span class="text-sm text-gray-600 font-semibold">Hal</span>
+                <span class="font-bold text-purple-700 text-base">{{ $berita->currentPage() }}</span>
+                <span class="text-sm text-gray-600 font-semibold">/</span>
+                <span class="font-bold text-purple-700 text-base">{{ $berita->lastPage() }}</span>
+            </div>
+
+            {{-- Next Page Link --}}
+            @if ($berita->hasMorePages())
+                <a href="{{ $berita->nextPageUrl() }}" class="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 group" style="background: linear-gradient(135deg, #9333ea 0%, #7c3aed 50%, #f59e0b 100%); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);">
+                    <span class="hidden sm:inline">Selanjutnya</span>
+                    <span class="sm:hidden">Next</span>
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            @else
+                <span class="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg text-gray-400 bg-gray-100 rounded-xl cursor-not-allowed font-semibold transition-all duration-300">
+                    <span class="hidden sm:inline">Selanjutnya</span>
+                    <span class="sm:hidden">Next</span>
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </span>
+            @endif
+        </nav>
+    @endif
+</div>
             <!-- Empty State -->
             <div class="text-center py-20 animate-on-scroll">
                 <div class="max-w-md mx-auto">
