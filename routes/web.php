@@ -51,13 +51,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Kelas Management
-    Route::resource('kelas', KelasController::class);
+        Route::resource('kelas', KelasController::class)->parameters([
+        'kelas' => 'kelas' // Parameter yang konsisten
+    ]);
+
 
     // Murid Management
     Route::get('murid/export', [MuridController::class, 'export'])->name('murid.export');
     Route::post('murid/import', [MuridController::class, 'import'])->name('murid.import');
     Route::delete('murid/bulk-delete', [MuridController::class, 'bulkDelete'])->name('murid.bulk-delete');
-    Route::put('murid/{murid}/reset-password', [MuridController::class, 'resetPassword'])->name('murid.reset-password');
+    Route::put('murid/{muri qd', [MuridController::class, 'resetPassword'])->name('murid.reset-password');
     Route::resource('murid', MuridController::class);
 
     // Presensi Management
