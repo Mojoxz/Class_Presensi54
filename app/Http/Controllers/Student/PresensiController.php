@@ -7,6 +7,7 @@ use App\Models\Presensi;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PresensiController extends Controller
 {
@@ -54,25 +55,35 @@ class PresensiController extends Controller
         $jamTutupMasuk = Carbon::today()->setTime(8, 30, 0);
 
         if (!$jamSekarang->between($jamBukaMasuk, $jamTutupMasuk)) {
-            return redirect()->back()->with('error', 'Presensi masuk hanya bisa dilakukan antara jam 06:00 - 08:30');
+            return response()->json([
+                'success' => false,
+                'message' => 'Presensi masuk hanya bisa dilakukan antara jam 06:00 - 08:30'
+            ], 400);
         }
 
         // Cek apakah sudah presensi hari ini
         $existingPresensi = Presensi::getPresensiToday($user->id);
 
         if ($existingPresensi) {
-            return redirect()->back()->with('error', 'Anda sudah melakukan presensi masuk hari ini');
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah melakukan presensi masuk hari ini'
+            ], 400);
         }
 
-        // Validasi foto
+        // Validasi foto base64
         $request->validate([
-            'foto_masuk' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'foto_masuk' => 'required|string'
         ]);
 
-        // Upload foto
-        $fotoPath = null;
-        if ($request->hasFile('foto_masuk')) {
-            $fotoPath = $request->file('foto_masuk')->store('presensi/masuk', 'public');
+        // Simpan foto dari base64
+        $fotoPath = $this->saveBase64Image($request->foto_masuk, 'presensi/masuk');
+
+        if (!$fotoPath) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan foto'
+            ], 500);
         }
 
         // Cek keterlambatan
@@ -93,7 +104,14 @@ class PresensiController extends Controller
             'keterangan' => $keterangan,
         ]);
 
-        return redirect()->back()->with('success', 'Presensi masuk berhasil dicatat pada ' . $jamSekarang->format('H:i:s'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Presensi masuk berhasil dicatat pada ' . $jamSekarang->format('H:i:s'),
+            'data' => [
+                'jam_masuk' => $jamSekarang->format('H:i:s'),
+                'keterangan' => $keterangan
+            ]
+        ]);
     }
 
     public function keluar(Request $request)
@@ -107,29 +125,42 @@ class PresensiController extends Controller
         $jamTutupKeluar = Carbon::today()->setTime(18, 0, 0);
 
         if (!$jamSekarang->between($jamBukaKeluar, $jamTutupKeluar)) {
-            return redirect()->back()->with('error', 'Presensi keluar hanya bisa dilakukan antara jam 14:00 - 18:00');
+            return response()->json([
+                'success' => false,
+                'message' => 'Presensi keluar hanya bisa dilakukan antara jam 14:00 - 18:00'
+            ], 400);
         }
 
         // Cari presensi hari ini
         $presensi = Presensi::getPresensiToday($user->id);
 
         if (!$presensi) {
-            return redirect()->back()->with('error', 'Anda belum melakukan presensi masuk');
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda belum melakukan presensi masuk'
+            ], 400);
         }
 
         if ($presensi->jam_keluar) {
-            return redirect()->back()->with('error', 'Anda sudah melakukan presensi keluar');
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah melakukan presensi keluar'
+            ], 400);
         }
 
-        // Validasi foto
+        // Validasi foto base64
         $request->validate([
-            'foto_keluar' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'foto_keluar' => 'required|string'
         ]);
 
-        // Upload foto
-        $fotoPath = null;
-        if ($request->hasFile('foto_keluar')) {
-            $fotoPath = $request->file('foto_keluar')->store('presensi/keluar', 'public');
+        // Simpan foto dari base64
+        $fotoPath = $this->saveBase64Image($request->foto_keluar, 'presensi/keluar');
+
+        if (!$fotoPath) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan foto'
+            ], 500);
         }
 
         $presensi->update([
@@ -137,6 +168,47 @@ class PresensiController extends Controller
             'foto_keluar' => $fotoPath,
         ]);
 
-        return redirect()->back()->with('success', 'Presensi keluar berhasil dicatat pada ' . $jamSekarang->format('H:i:s'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Presensi keluar berhasil dicatat pada ' . $jamSekarang->format('H:i:s'),
+            'data' => [
+                'jam_keluar' => $jamSekarang->format('H:i:s')
+            ]
+        ]);
+    }
+
+    /**
+     * Helper function untuk menyimpan gambar base64
+     */
+    private function saveBase64Image($base64String, $path)
+    {
+        try {
+            // Hapus prefix data:image/...;base64, jika ada
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64String, $type)) {
+                $base64String = substr($base64String, strpos($base64String, ',') + 1);
+                $type = strtolower($type[1]); // jpg, png, gif
+            } else {
+                return false;
+            }
+
+            // Decode base64
+            $image = base64_decode($base64String);
+
+            if ($image === false) {
+                return false;
+            }
+
+            // Generate nama file unik
+            $fileName = Str::random(40) . '.' . $type;
+            $filePath = $path . '/' . $fileName;
+
+            // Simpan file
+            Storage::disk('public')->put($filePath, $image);
+
+            return $filePath;
+        } catch (\Exception $e) {
+            \Log::error('Error saving image: ' . $e->getMessage());
+            return false;
+        }
     }
 }

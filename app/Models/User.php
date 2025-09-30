@@ -18,6 +18,7 @@ class User extends Authenticatable
         'role',
         'kelas_id',
         'nis',
+        'foto_profil',
     ];
 
     protected $hidden = [

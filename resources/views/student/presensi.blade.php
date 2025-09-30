@@ -85,34 +85,13 @@
                         <p class="text-gray-500 mb-4">Belum presensi keluar</p>
 
                         @if($bolehKeluar)
-                            <form method="POST" action="{{ route('student.presensi.keluar') }}" enctype="multipart/form-data" id="formKeluarPresensi">
-                                @csrf
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        </svg>
-                                        Ambil Foto Keluar
-                                    </label>
-                                    <input type="file"
-                                           name="foto_keluar"
-                                           accept="image/*"
-                                           capture="user"
-                                           required
-                                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
-                                           onchange="previewImage(this, 'previewKeluar')">
-                                </div>
-                                <div id="previewKeluar" class="mb-4 hidden">
-                                    <img src="" alt="Preview" class="w-32 h-32 object-cover rounded-lg mx-auto border-2 border-purple-300">
-                                </div>
-                                <button type="submit" class="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7"></path>
-                                    </svg>
-                                    Presensi Keluar
-                                </button>
-                            </form>
+                            <button onclick="openCameraModal('keluar')" class="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Presensi Keluar
+                            </button>
                         @else
                             <div class="bg-gray-100 border border-gray-300 rounded-lg p-4">
                                 <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,38 +116,13 @@
                     <p class="text-gray-600 mb-6">Silakan lakukan presensi masuk untuk hari ini</p>
                 </div>
 
-                <form method="POST" action="{{ route('student.presensi.masuk') }}" enctype="multipart/form-data" class="max-w-md mx-auto">
-                    @csrf
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-3">
-                            <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            Ambil Foto Selfie untuk Presensi
-                        </label>
-                        <input type="file"
-                               name="foto_masuk"
-                               accept="image/*"
-                               capture="user"
-                               required
-                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                               onchange="previewImage(this, 'previewMasuk')">
-                        <p class="text-xs text-gray-500 mt-2">Format: JPG, PNG (Max: 2MB)</p>
-                    </div>
-
-                    <div id="previewMasuk" class="mb-6 hidden">
-                        <p class="text-sm font-medium text-gray-700 mb-2">Preview Foto:</p>
-                        <img src="" alt="Preview" class="w-48 h-48 object-cover rounded-lg mx-auto border-4 border-green-300 shadow-lg">
-                    </div>
-
-                    <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 7l2 2 4-4"></path>
-                        </svg>
-                        Presensi Masuk Sekarang
-                    </button>
-                </form>
+                <button onclick="openCameraModal('masuk')" class="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Presensi Masuk Sekarang
+                </button>
 
                 <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-md mx-auto">
                     <p class="text-sm text-blue-800">
@@ -265,6 +219,58 @@
     @endif
 </div>
 
+<!-- Modal Kamera -->
+<div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900">Ambil Foto Presensi</h3>
+            <button onclick="closeCameraModal()" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="relative">
+            <video id="camera" class="w-full rounded-lg bg-gray-900" autoplay playsinline></video>
+            <canvas id="canvas" class="hidden"></canvas>
+
+            <div id="capturedImage" class="hidden">
+                <img id="photo" src="" alt="Captured" class="w-full rounded-lg">
+            </div>
+        </div>
+
+        <div class="mt-4 flex justify-center gap-4">
+            <button id="captureBtn" onclick="capturePhoto()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Ambil Foto
+            </button>
+
+            <button id="retakeBtn" onclick="retakePhoto()" class="hidden bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Ambil Ulang
+            </button>
+
+            <button id="submitBtn" onclick="submitPresensi()" class="hidden bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Kirim Presensi
+            </button>
+        </div>
+
+        <div id="loadingIndicator" class="hidden mt-4 text-center">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
+            <p class="mt-2 text-gray-600">Memproses presensi...</p>
+        </div>
+    </div>
+</div>
+
 <!-- Modal untuk melihat gambar -->
 <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4" onclick="closeImageModal()">
     <div class="relative max-w-4xl max-h-full">
@@ -278,6 +284,10 @@
 </div>
 
 <script>
+    let stream = null;
+    let capturedImageData = null;
+    let presensiType = null; // 'masuk' atau 'keluar'
+
     function updateDateTime() {
         const now = new Date();
         const timeOptions = {
@@ -296,18 +306,156 @@
         document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', dateOptions);
     }
 
-    function previewImage(input, previewId) {
-        const preview = document.getElementById(previewId);
-        const img = preview.querySelector('img');
+    async function openCameraModal(type) {
+        presensiType = type;
+        const modal = document.getElementById('cameraModal');
+        const video = document.getElementById('camera');
+        const capturedImage = document.getElementById('capturedImage');
+        const captureBtn = document.getElementById('captureBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        const submitBtn = document.getElementById('submitBtn');
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                img.src = e.target.result;
-                preview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(input.files[0]);
+        modal.classList.remove('hidden');
+        capturedImage.classList.add('hidden');
+        video.classList.remove('hidden');
+        captureBtn.classList.remove('hidden');
+        retakeBtn.classList.add('hidden');
+        submitBtn.classList.add('hidden');
+
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'user',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            });
+            video.srcObject = stream;
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+            alert('Gagal mengakses kamera. Pastikan Anda telah memberikan izin akses kamera.');
+            closeCameraModal();
         }
+    }
+
+    function capturePhoto() {
+        const video = document.getElementById('camera');
+        const canvas = document.getElementById('canvas');
+        const photo = document.getElementById('photo');
+        const capturedImage = document.getElementById('capturedImage');
+        const captureBtn = document.getElementById('captureBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Set canvas size to match video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Draw video frame to canvas
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to base64
+        capturedImageData = canvas.toDataURL('image/jpeg', 0.8);
+
+        // Show captured image
+        photo.src = capturedImageData;
+        video.classList.add('hidden');
+        capturedImage.classList.remove('hidden');
+        captureBtn.classList.add('hidden');
+        retakeBtn.classList.remove('hidden');
+        submitBtn.classList.remove('hidden');
+
+        // Stop camera stream
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    }
+
+    function retakePhoto() {
+        const video = document.getElementById('camera');
+        const capturedImage = document.getElementById('capturedImage');
+        const captureBtn = document.getElementById('captureBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        capturedImageData = null;
+        video.classList.remove('hidden');
+        capturedImage.classList.add('hidden');
+        captureBtn.classList.remove('hidden');
+        retakeBtn.classList.add('hidden');
+        submitBtn.classList.add('hidden');
+
+        // Restart camera
+        openCameraModal(presensiType);
+    }
+
+    async function submitPresensi() {
+        if (!capturedImageData) {
+            alert('Silakan ambil foto terlebih dahulu');
+            return;
+        }
+
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const submitBtn = document.getElementById('submitBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+
+        loadingIndicator.classList.remove('hidden');
+        submitBtn.disabled = true;
+        retakeBtn.disabled = true;
+
+        try {
+            const url = presensiType === 'masuk'
+                ? '{{ route("student.presensi.masuk") }}'
+                : '{{ route("student.presensi.keluar") }}';
+
+            const fieldName = presensiType === 'masuk' ? 'foto_masuk' : 'foto_keluar';
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    [fieldName]: capturedImageData
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(data.message);
+                closeCameraModal();
+                location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan saat memproses presensi');
+                submitBtn.disabled = false;
+                retakeBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengirim presensi');
+            submitBtn.disabled = false;
+            retakeBtn.disabled = false;
+        } finally {
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+    function closeCameraModal() {
+        const modal = document.getElementById('cameraModal');
+        modal.classList.add('hidden');
+
+        // Stop camera stream
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+
+        capturedImageData = null;
+        presensiType = null;
     }
 
     function showImageModal(imageSrc) {
@@ -322,7 +470,27 @@
         modal.classList.add('hidden');
     }
 
+    // Close modal when clicking outside
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeImageModal();
+        }
+    });
+
     setInterval(updateDateTime, 1000);
     updateDateTime();
 </script>
+
+@if(session('success'))
+<script>
+    alert('{{ session("success") }}');
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    alert('{{ session("error") }}');
+</script>
+@endif
+
 @endsection
