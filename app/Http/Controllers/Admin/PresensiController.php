@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PresensiExport;
 
 class PresensiController extends Controller
 {
@@ -75,10 +77,40 @@ class PresensiController extends Controller
         return view('admin.presensi.rekap', compact('rekapData', 'kelas', 'bulan', 'tahun', 'kelasId'));
     }
 
+    public function detail(Request $request, $userId)
+    {
+        $bulan = $request->get('bulan', Carbon::now()->month);
+        $tahun = $request->get('tahun', Carbon::now()->year);
+
+        $siswa = User::with('kelas')->findOrFail($userId);
+
+        $presensi = Presensi::where('user_id', $userId)
+                            ->whereMonth('tanggal', $bulan)
+                            ->whereYear('tanggal', $tahun)
+                            ->orderBy('tanggal', 'desc')
+                            ->get();
+
+        // Hitung statistik
+        $statistik = [
+            'total' => $presensi->count(),
+            'hadir' => $presensi->where('status', 'hadir')->count(),
+            'tidak_hadir' => $presensi->where('status', 'tidak_hadir')->count(),
+            'izin' => $presensi->where('status', 'izin')->count(),
+            'sakit' => $presensi->where('status', 'sakit')->count(),
+        ];
+
+        return view('admin.presensi.detail', compact('siswa', 'presensi', 'statistik', 'bulan', 'tahun'));
+    }
+
     public function export(Request $request)
     {
-        // Implementation for Excel export
-        // You can use Laravel Excel package for this
-        return response()->json(['message' => 'Export feature will be implemented']);
+        $bulan = $request->get('bulan', Carbon::now()->month);
+        $tahun = $request->get('tahun', Carbon::now()->year);
+        $kelasId = $request->get('kelas_id');
+
+        $namaBulan = Carbon::create()->month($bulan)->format('F');
+        $filename = "Rekap_Presensi_{$namaBulan}_{$tahun}.xlsx";
+
+        return Excel::download(new PresensiExport($bulan, $tahun, $kelasId), $filename);
     }
 }

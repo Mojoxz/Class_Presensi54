@@ -66,6 +66,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jam Masuk</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jam Keluar</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
                     </tr>
                 </thead>
@@ -98,7 +99,26 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ $item->jam_keluar ? \Carbon\Carbon::parse($item->jam_keluar)->format('H:i') : '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex gap-2">
+                                    @if($item->foto_masuk)
+                                        <button onclick="openImageModal('{{ asset('storage/' . $item->foto_masuk) }}', 'Foto Masuk - {{ $item->user->name }}')"
+                                                class="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                                            Masuk
+                                        </button>
+                                    @endif
+                                    @if($item->foto_keluar)
+                                        <button onclick="openImageModal('{{ asset('storage/' . $item->foto_keluar) }}', 'Foto Keluar - {{ $item->user->name }}')"
+                                                class="text-green-600 hover:text-green-800 text-xs font-medium">
+                                            Keluar
+                                        </button>
+                                    @endif
+                                    @if(!$item->foto_masuk && !$item->foto_keluar)
+                                        <span class="text-gray-400 text-xs">-</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                                 {{ $item->keterangan ?? '-' }}
                             </td>
                         </tr>
@@ -121,4 +141,45 @@
         </div>
     @endif
 </div>
+
+<!-- Modal untuk melihat foto -->
+<div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" onclick="closeImageModal()">
+    <div class="relative max-w-4xl max-h-full">
+        <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <img id="modalImage" src="" alt="" class="max-w-full max-h-screen rounded-lg">
+        <p id="modalCaption" class="text-white text-center mt-4 text-lg"></p>
+    </div>
+</div>
+
+<script>
+function openImageModal(imageSrc, caption) {
+    document.getElementById('imageModal').classList.remove('hidden');
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('modalCaption').textContent = caption;
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Prevent modal from closing when clicking on image
+document.getElementById('imageModal').addEventListener('click', function(e) {
+    if (e.target.id === 'imageModal') {
+        closeImageModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeImageModal();
+    }
+});
+</script>
 @endsection

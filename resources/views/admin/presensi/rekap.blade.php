@@ -5,9 +5,22 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold text-gray-900">Rekap Presensi Bulanan</h2>
-    <a href="{{ route('admin.presensi.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-        Kembali
-    </a>
+    <div class="flex gap-2">
+        <form method="GET" action="{{ route('admin.presensi.export') }}" class="inline">
+            <input type="hidden" name="bulan" value="{{ $bulan }}">
+            <input type="hidden" name="tahun" value="{{ $tahun }}">
+            <input type="hidden" name="kelas_id" value="{{ $kelasId }}">
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Export Excel
+            </button>
+        </form>
+        <a href="{{ route('admin.presensi.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+            Kembali
+        </a>
+    </div>
 </div>
 
 <!-- Filter -->
@@ -97,6 +110,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sakit</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tidak Hadir</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">%</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -132,6 +146,12 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ $data['total'] > 0 ? round(($data['hadir'] / $data['total']) * 100, 1) : 0 }}%
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <a href="{{ route('admin.presensi.detail', ['userId' => $data['siswa']->id, 'bulan' => $bulan, 'tahun' => $tahun]) }}"
+                                   class="text-blue-600 hover:text-blue-900 font-medium">
+                                    Lihat Detail
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -147,4 +167,4 @@
         </div>
     @endif
 </div>
-@endsection 
+@endsection
