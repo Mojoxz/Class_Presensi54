@@ -27,7 +27,7 @@
                 <h2 class="text-2xl font-bold text-gray-900">{{ $siswa->name }}</h2>
                 <p class="text-gray-600">NIS: {{ $siswa->nis }}</p>
                 <p class="text-gray-600">Kelas: {{ $siswa->kelas->nama_kelas ?? '-' }}</p>
-                <p class="text-gray-600">Periode: {{ \Carbon\Carbon::create()->month($bulan)->format('F') }} {{ $tahun }}</p>
+                <p class="text-gray-600">Periode: {{ \Carbon\Carbon::create()->month((int)$bulan)->format('F') }} {{ $tahun }}</p>
             </div>
         </div>
     </div>

@@ -104,7 +104,7 @@ class PresensiController extends Controller
 
     public function export(Request $request)
     {
-        $bulan = $request->get('bulan', Carbon::now()->month);
+        $bulan = (int) $request->get('bulan', Carbon::now()->month);
         $tahun = $request->get('tahun', Carbon::now()->year);
         $kelasId = $request->get('kelas_id');
 
