@@ -13,8 +13,8 @@
             <div class="flex items-center h-20">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3 mr-8">
-                    <div class="logo-circle">
-                        <span class="text-xl font-bold gradient-text">54</span>
+                    <div class="flex items-center">
+                       <img src="{{ asset('logo.png') }}" alt="Logo" class="h-12">
                     </div>
                     <div class="hidden md:block">
                         <div class="text-lg font-bold text-gray-900">SMP 54 Surabaya</div>
@@ -23,8 +23,8 @@
                 </div>
 
                 <!-- Desktop Navigation - Moved to Left -->
-                <div class="hidden lg:flex items-center space-x-1 flex-1">
-                    <a href="{{ route('landing') }}" class="nav-link {{ request()->routeIs('landing') ? 'nav-link-active' : '' }}">
+                <div class="hidden lg:flex items-center space-x-2 flex-1 justify-end ">
+                    <a href="{{ route('landing') }}" class="nav-link  {{ request()->routeIs('landing') ? 'nav-link-active' : '' }}">
                         Beranda
                     </a>
                     <a href="{{ route('tentang') }}" class="nav-link {{ request()->routeIs('tentang') ? 'nav-link-active' : '' }}">
