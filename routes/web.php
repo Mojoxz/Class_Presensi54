@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PresensiController as AdminPresensiController;
 use App\Http\Controllers\Admin\BeritaController as AdminBeritaController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\PresensiController as StudentPresensiController;
+use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
@@ -16,11 +17,6 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 // ===========================
@@ -51,16 +47,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Kelas Management
-        Route::resource('kelas', KelasController::class)->parameters([
-        'kelas' => 'kelas' // Parameter yang konsisten
+    Route::resource('kelas', KelasController::class)->parameters([
+        'kelas' => 'kelas'
     ]);
-
 
     // Murid Management
     Route::get('murid/export', [MuridController::class, 'export'])->name('murid.export');
     Route::post('murid/import', [MuridController::class, 'import'])->name('murid.import');
     Route::delete('murid/bulk-delete', [MuridController::class, 'bulkDelete'])->name('murid.bulk-delete');
-    Route::put('murid/{muri qd', [MuridController::class, 'resetPassword'])->name('murid.reset-password');
+    Route::put('murid/{murid}/reset-password', [MuridController::class, 'resetPassword'])->name('murid.reset-password');
     Route::resource('murid', MuridController::class);
 
     // Presensi Management
@@ -68,7 +63,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('presensi/rekap', [AdminPresensiController::class, 'rekap'])->name('presensi.rekap');
     Route::get('presensi/export', [AdminPresensiController::class, 'export'])->name('presensi.export');
 
-    // Berita Management (Fixed parameter name)
+    // Berita Management
     Route::resource('berita', AdminBeritaController::class)->parameters([
         'berita' => 'berita'
     ]);
@@ -86,10 +81,15 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::get('/presensi', [StudentPresensiController::class, 'index'])->name('presensi');
     Route::post('/presensi/masuk', [StudentPresensiController::class, 'masuk'])->name('presensi.masuk');
     Route::post('/presensi/keluar', [StudentPresensiController::class, 'keluar'])->name('presensi.keluar');
+
+    // Profile
+    Route::get('/profile', [StudentProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [StudentProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [StudentProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
 // ===========================
-// PROFILE ROUTES
+// PROFILE ROUTES (Original - jika masih digunakan)
 // ===========================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

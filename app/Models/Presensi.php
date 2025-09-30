@@ -17,14 +17,16 @@ class Presensi extends Model
         'tanggal',
         'jam_masuk',
         'jam_keluar',
+        'foto_masuk',
+        'foto_keluar',
         'status',
         'keterangan',
     ];
 
     protected $casts = [
         'tanggal' => 'date',
-        'jam_masuk' => 'datetime:H:i:s',
-        'jam_keluar' => 'datetime:H:i:s',
+        'jam_masuk' => 'datetime',
+        'jam_keluar' => 'datetime',
     ];
 
     public function user()
@@ -58,5 +60,16 @@ class Presensi extends Model
         $sakit = $query->where('status', 'sakit')->count();
 
         return compact('total', 'hadir', 'tidak_hadir', 'izin', 'sakit');
+    }
+
+    // Helper untuk format jam
+    public function getJamMasukFormatted()
+    {
+        return $this->jam_masuk ? $this->jam_masuk->format('H:i:s') : '-';
+    }
+
+    public function getJamKeluarFormatted()
+    {
+        return $this->jam_keluar ? $this->jam_keluar->format('H:i:s') : '-';
     }
 }
