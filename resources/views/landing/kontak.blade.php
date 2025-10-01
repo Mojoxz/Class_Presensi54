@@ -4,19 +4,30 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="hero-section relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50 to-amber-50">
-    <!-- Animated Background Elements -->
-    <div class="absolute inset-0 overflow-hidden">
+<section class="relative min-h-screen overflow-hidden">
+    <!-- Background Image Layer -->
+    <div class="absolute inset-0 z-0">
+        <img src="{{ asset('images/gedung.jpg') }}"
+             alt="Gedung SMP 54 Surabaya"
+             class="w-full h-full object-cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #9333ea 0%, #f59e0b 100%)';">
+        <!-- Dark overlay for better text readability -->
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/80 via-purple-800/75 to-amber-900/70"></div>
+    </div>
+
+    <!-- Floating shapes -->
+    <div class="absolute inset-0 z-[1] overflow-hidden pointer-events-none">
         <div class="floating-shape shape-1"></div>
         <div class="floating-shape shape-2"></div>
         <div class="floating-shape shape-3"></div>
     </div>
 
+    <!-- Content -->
     <div class="container-custom relative z-10 py-20">
         <div class="text-center space-y-8">
             <!-- Badge -->
             <div class="animate-fade-in-down" style="animation-delay: 0.1s;">
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-purple-200 shadow-sm">
+                <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-md rounded-full border border-white/30 shadow-lg">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
@@ -27,51 +38,49 @@
 
             <!-- Main Heading -->
             <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
-                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
-                    <span class="block">Kontak</span>
-                    <span class="block gradient-text">SMP 54 Surabaya</span>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">
+                    <span class="block text-white drop-shadow-lg">Kontak</span>
+                    <span class="block gradient-text-light drop-shadow-lg">SMP 54 Surabaya</span>
                 </h1>
                 <div class="flex items-center justify-center gap-2 mt-4">
-                    <div class="h-1 w-12 bg-gradient-to-r from-purple-600 to-transparent rounded-full"></div>
-                    <div class="h-1 w-12 bg-gradient-to-r from-purple-600 via-amber-500 to-transparent rounded-full"></div>
+                    <div class="h-1 w-12 bg-gradient-to-r from-white/80 to-transparent rounded-full"></div>
+                    <div class="h-1 w-12 bg-gradient-to-r from-amber-400 via-purple-400 to-transparent rounded-full"></div>
                 </div>
             </div>
 
             <!-- Description -->
             <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
-                <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                    Kami siap membantu Anda dengan<br class="hidden md:block">
-                    <span class="font-semibold text-gray-800">Pelayanan Terbaik</span> dan
-                    <span class="font-semibold text-gray-800">Respon Cepat</span>
+                <p class="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+                    Kami Siap Membantu Anda Dengan<br class="hidden md:block">
+                    <span class="font-semibold text-amber-200">Pelayanan Terbaik</span> dan
+                    <span class="font-semibold text-amber-200">Respon Cepat</span>
                 </p>
             </div>
 
             <!-- Stats -->
-            <div class="animate-fade-in-up grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-8" style="animation-delay: 0.4s;">
-                <div class="text-center">
-                    <div class="text-2xl md:text-3xl font-bold gradient-text">24/7</div>
-                    <div class="text-sm text-gray-600 mt-1">Layanan Online</div>
+            <div class="animate-fade-in-up grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto pt-8" style="animation-delay: 0.4s;">
+                <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                    <div class="text-xl md:text-3xl font-bold text-amber-300">24/7</div>
+                    <div class="text-xs md:text-sm text-white/90 mt-1">Layanan Online</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-2xl md:text-3xl font-bold gradient-text">&lt; 1h</div>
-                    <div class="text-sm text-gray-600 mt-1">Respon Time</div>
+                <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                    <div class="text-xl md:text-3xl font-bold text-amber-300">lt; 1h</div>
+                    <div class="text-xs md:text-sm text-white/90 mt-1">Respon Time</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-2xl md:text-3xl font-bold gradient-text">100%</div>
-                    <div class="text-sm text-gray-600 mt-1">Satisfaction</div>
+                <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                    <div class="text-xl md:text-3xl font-bold text-amber-300">100%</div>
+                    <div class="text-xs md:text-sm text-white/90 mt-1">Satisfaction</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
         </svg>
     </div>
 </section>
-
 <!-- Contact Section -->
 <section class="py-20 md:py-32 bg-white relative">
     <div class="container-custom">
