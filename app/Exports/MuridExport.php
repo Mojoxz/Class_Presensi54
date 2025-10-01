@@ -38,6 +38,8 @@ class MuridExport implements FromCollection, WithHeadings, WithMapping, WithStyl
             'Nama Lengkap',
             'Email',
             'Kelas',
+            'Password',
+            'Status Password',
             'Status Akun',
             'Tanggal Bergabung',
             'Total Hadir',

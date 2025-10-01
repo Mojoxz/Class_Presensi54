@@ -103,7 +103,8 @@ class MuridController extends Controller
 
         // Update password jika diisi
         if ($request->filled('password')) {
-            $murid->update(['password' => Hash::make($request->password)]);
+            $murid->update(['password' => Hash::make($request->password),
+                            'password_changed_at' => now()]);
         }
 
         // Update jumlah siswa di kelas lama dan baru jika berbeda
@@ -263,7 +264,8 @@ public function resetPassword(Request $request, User $murid)
 
     try {
         $murid->update([
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'password_changed_at' => now()
         ]);
 
         return redirect()->route('admin.murid.show', $murid->id)
