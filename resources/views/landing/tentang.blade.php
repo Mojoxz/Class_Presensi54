@@ -135,15 +135,15 @@
 
             <!-- Visual Element -->
             <div class="animate-on-scroll" style="animation-delay: 0.2s;">
-                <div class="relative">
-                    <div class="news-card !p-8 text-center bg-gradient-to-br from-purple-50 to-amber-50 border-0">
-                        <div class="feature-icon-wrapper bg-gradient-to-br from-purple-600 to-amber-500 !w-20 !h-20 mx-auto mb-6">
-                            <img src="{{ asset('gedung.jpg') }}"
-                                alt="Gambar Besar"
-                                class="w-full h-64 object-cover rounded-lg shadow-lg" />
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Gedung Sekolah Modern</h3>
-                        <p class="text-gray-600">Fasilitas lengkap dan modern untuk mendukung proses pembelajaran yang optimal</p>
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-purple-50 to-amber-50">
+                    <div class="relative h-[600px] md:h-[850px] lg:h-[1000px]">
+                        <img src="{{ asset('gedung.jpg') }}"
+                            alt="Gedung Sekolah SMP 54 Surabaya"
+                            class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-8 md:p-12 text-center">
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Gedung Sekolah Modern</h3>
+                        <p class="text-lg md:text-xl text-gray-600">Fasilitas lengkap dan modern untuk mendukung proses pembelajaran yang optimal</p>
                     </div>
                 </div>
             </div>
@@ -194,37 +194,37 @@
                     <h3 class="text-2xl font-bold text-gray-900 mb-4">Misi Sekolah</h3>
                 </div>
                 <ul class="space-y-4 text-gray-700">
-                    <li class="flex items-start gap-3">
-                        <div class="feature-icon-wrapper bg-gradient-to-br from-green-500 to-green-600 !w-6 !h-6 flex-shrink-0 mt-1">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    <li class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span>Menyelenggarakan pendidikan yang berkualitas</span>
+                        <span class="flex-1">Menyelenggarakan pendidikan yang berkualitas</span>
                     </li>
-                    <li class="flex items-start gap-3">
-                        <div class="feature-icon-wrapper bg-gradient-to-br from-green-500 to-green-600 !w-6 !h-6 flex-shrink-0 mt-1">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    <li class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span>Mengembangkan karakter siswa yang berakhlak mulia</span>
+                        <span class="flex-1">Mengembangkan karakter siswa yang berakhlak mulia</span>
                     </li>
-                    <li class="flex items-start gap-3">
-                        <div class="feature-icon-wrapper bg-gradient-to-br from-green-500 to-green-600 !w-6 !h-6 flex-shrink-0 mt-1">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    <li class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span>Meningkatkan prestasi akademik dan non-akademik</span>
+                        <span class="flex-1">Meningkatkan prestasi akademik dan non-akademik</span>
                     </li>
-                    <li class="flex items-start gap-3">
-                        <div class="feature-icon-wrapper bg-gradient-to-br from-green-500 to-green-600 !w-6 !h-6 flex-shrink-0 mt-1">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    <li class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span>Mempersiapkan siswa untuk masa depan yang cerah</span>
+                        <span class="flex-1">Mempersiapkan siswa untuk masa depan yang cerah</span>
                     </li>
                 </ul>
             </div>
