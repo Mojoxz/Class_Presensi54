@@ -4,7 +4,19 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50 to-amber-50">
+<section class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Image Slider -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="hero-slider">
+            <div class="hero-slide active" style="background-image: url('{{ asset('images/sekolah.jpeg') }}');"></div>
+            <div class="hero-slide" style="background-image: url('{{ asset('images/gedung.jpg') }}');"></div>
+            <div class="hero-slide" style="background-image: url('{{ asset('images/hero-3.jpg') }}');"></div>
+            <div class="hero-slide" style="background-image: url('{{ asset('images/hero-4.jpg') }}');"></div>
+        </div>
+        <!-- Overlay untuk readability -->
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-purple-900/60 to-amber-900/70"></div>
+    </div>
+
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 overflow-hidden">
         <div class="floating-shape shape-1"></div>
@@ -27,28 +39,28 @@
 
             <!-- Main Heading -->
             <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
-                <h1 class="text-5xl md:text-7xl font-bold text-gray-900 mb-4 tracking-tight">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">
                     <span class="block">SMP 54</span>
-                    <span class="block gradient-text">Surabaya</span>
+                    <span class="block gradient-text-light">Surabaya</span>
                 </h1>
                 <div class="flex items-center justify-center gap-2 mt-4">
-                    <div class="h-1 w-12 bg-gradient-to-r from-purple-600 to-transparent rounded-full"></div>
-                    <div class="h-1 w-12 bg-gradient-to-r from-purple-600 via-amber-500 to-transparent rounded-full"></div>
+                    <div class="h-1 w-12 bg-gradient-to-r from-purple-400 to-transparent rounded-full"></div>
+                    <div class="h-1 w-12 bg-gradient-to-r from-purple-400 via-amber-400 to-transparent rounded-full"></div>
                 </div>
             </div>
 
             <!-- Description -->
             <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
-                <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                <p class="text-xl md:text-2xl text-white max-w-3xl mx-auto leading-relaxed drop-shadow-md">
                     Mencerdaskan Generasi Bangsa dengan<br class="hidden md:block">
-                    <span class="font-semibold text-gray-800">Pendidikan Berkualitas</span> dan
-                    <span class="font-semibold text-gray-800">Teknologi Modern</span>
+                    <span class="font-semibold text-amber-300">Pendidikan Berkualitas</span> dan
+                    <span class="font-semibold text-purple-300">Teknologi Modern</span>
                 </p>
             </div>
 
             <!-- CTA Buttons -->
             <div class="animate-fade-in-up flex flex-col sm:flex-row gap-4 justify-center items-center pt-4" style="animation-delay: 0.4s;">
-                <a href="{{ route('tentang') }}" class="group inline-flex items-center gap-2 px-8 py-4 border-2 border-gray-900 text-gray-900 font-semibold rounded-xl hover:bg-gray-900 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+                <a href="{{ route('tentang') }}" class="group inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
                     <span>Tentang Kami</span>
                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -66,16 +78,16 @@
             <!-- Stats -->
             <div class="animate-fade-in-up grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-12" style="animation-delay: 0.5s;">
                 <div class="text-center">
-                    <div class="text-3xl md:text-4xl font-bold gradient-text">1000+</div>
-                    <div class="text-sm text-gray-600 mt-1">Siswa Aktif</div>
+                    <div class="text-3xl md:text-4xl font-bold gradient-text-stat drop-shadow-lg">1000+</div>
+                    <div class="text-sm text-white mt-1">Siswa Aktif</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl md:text-4xl font-bold gradient-text">50+</div>
-                    <div class="text-sm text-gray-600 mt-1">Tenaga Pengajar</div>
+                    <div class="text-3xl md:text-4xl font-bold gradient-text-stat drop-shadow-lg">50+</div>
+                    <div class="text-sm text-white mt-1">Tenaga Pengajar</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl md:text-4xl font-bold gradient-text">20+</div>
-                    <div class="text-sm text-gray-600 mt-1">Tahun Berdiri</div>
+                    <div class="text-3xl md:text-4xl font-bold gradient-text-stat drop-shadow-lg">20+</div>
+                    <div class="text-sm text-white mt-1">Tahun Berdiri</div>
                 </div>
             </div>
         </div>
@@ -83,7 +95,7 @@
 
     <!-- Scroll Indicator -->
     <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
         </svg>
     </div>
@@ -234,4 +246,57 @@
         </div>
     </div>
 </section>
+
+<style>
+/* Hero Slider Styles */
+.hero-slider {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+.gradient-text-light {
+    background: linear-gradient(135deg, #fbbf24 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.gradient-text-stat {
+    background: linear-gradient(135deg, #fef3c7 0%, #e9d5ff 50%, #fef3c7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.hero-slide');
+    let currentSlide = 0;
+
+    function nextSlide() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }
+
+    // Ganti slide setiap 5 detik
+    setInterval(nextSlide, 5000);
+});
+</script>
 @endsection

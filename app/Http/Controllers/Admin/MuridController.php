@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MuridImport;
+use App\Exports\MuridExport;
 
 class MuridController extends Controller
 {
