@@ -191,40 +191,40 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Misi Sekolah</h3>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Misi Sekolah</h3>
                 </div>
-                <ul class="space-y-4 text-gray-700">
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                <ul class="space-y-5 text-gray-700 px-4">
+                    <li class="flex items-start gap-4">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="flex-1">Menyelenggarakan pendidikan yang berkualitas</span>
+                        <span class="flex-1 leading-relaxed">Menyelenggarakan pendidikan yang berkualitas</span>
                     </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                    <li class="flex items-start gap-4">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="flex-1">Mengembangkan karakter siswa yang berakhlak mulia</span>
+                        <span class="flex-1 leading-relaxed">Mengembangkan karakter siswa yang berakhlak mulia</span>
                     </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                    <li class="flex items-start gap-4">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="flex-1">Meningkatkan prestasi akademik dan non-akademik</span>
+                        <span class="flex-1 leading-relaxed">Meningkatkan prestasi akademik dan non-akademik</span>
                     </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                    <li class="flex items-start gap-4">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="flex-1">Mempersiapkan siswa untuk masa depan yang cerah</span>
+                        <span class="flex-1 leading-relaxed">Mempersiapkan siswa untuk masa depan yang cerah</span>
                     </li>
                 </ul>
             </div>
