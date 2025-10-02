@@ -2,13 +2,13 @@
 
 /* Sidebar Styles */
 .admin-sidebar {
-    @apply fixed left-0 top-0 h-full bg-gradient-to-b from-gray-900 to-gray-800 text-white transition-all duration-300 ease-in-out z-50;
-    width: 260px;
+    @apply fixed left-0 top-0 h-full bg-gradient-to-b from-gray-900 to-gray-800 text-white transition-all duration-300 ease-in-out z-50 overflow-y-auto;
+    width: 280px;
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
 }
 
 .admin-sidebar.collapsed {
-    width: 70px;
+    width: 80px;
 }
 
 .admin-sidebar-header {
@@ -47,17 +47,24 @@
     @apply text-xs text-gray-400 mt-0.5;
 }
 
-/* Navigation Styles */
+/* Navigation Styles - FIXED: Vertical Layout */
 .admin-nav {
-    @apply mt-6 px-3 space-y-1;
+    @apply mt-6 px-3;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .admin-nav-item {
-    @apply flex items-center px-4 py-3 text-gray-300 rounded-lg transition-all duration-200 cursor-pointer relative;
+    @apply flex items-center px-4 py-3.5 text-gray-300 rounded-xl transition-all duration-200 cursor-pointer relative;
+    text-decoration: none;
+    display: flex;
+    width: 100%;
 }
 
 .admin-nav-item:hover {
     @apply bg-gray-700/50 text-white;
+    transform: translateX(4px);
 }
 
 .admin-nav-item.active {
@@ -65,15 +72,19 @@
 }
 
 .admin-nav-icon {
-    @apply w-5 h-5 flex-shrink-0 transition-all duration-200;
+    @apply flex-shrink-0 transition-all duration-200;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
 }
 
 .admin-nav-item:hover .admin-nav-icon {
-    @apply scale-110;
+    transform: scale(1.15);
 }
 
 .admin-nav-text {
-    @apply ml-3 font-medium transition-all duration-300 overflow-hidden whitespace-nowrap;
+    @apply ml-3 font-medium transition-all duration-300 overflow-hidden whitespace-nowrap text-base;
+    flex: 1;
 }
 
 .admin-sidebar.collapsed .admin-nav-text {
@@ -96,21 +107,21 @@
 /* Toggle Button */
 .sidebar-toggle {
     @apply fixed bottom-6 bg-gradient-to-r from-purple-600 to-purple-500 text-white p-3 rounded-lg shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-110 z-50;
-    left: 220px;
+    left: 240px;
 }
 
 .admin-sidebar.collapsed ~ .sidebar-toggle {
-    left: 30px;
+    left: 40px;
 }
 
 /* Main Content Area */
 .admin-main-wrapper {
     @apply transition-all duration-300 ease-in-out;
-    margin-left: 260px;
+    margin-left: 280px;
 }
 
 .admin-sidebar.collapsed ~ .admin-main-wrapper {
-    margin-left: 70px;
+    margin-left: 80px;
 }
 
 .admin-main-content {
@@ -292,6 +303,7 @@
 @media (max-width: 768px) {
     .admin-sidebar {
         transform: translateX(-100%);
+        width: 280px;
     }
 
     .admin-sidebar.mobile-open {
@@ -304,14 +316,69 @@
 
     .sidebar-toggle {
         left: 20px !important;
+        bottom: 20px;
     }
 
     .admin-header-title {
-        @apply text-xl;
+        @apply text-lg;
     }
 
     .admin-content {
         @apply p-4;
+    }
+
+    .admin-header-content {
+        @apply px-4 py-3;
+    }
+
+    /* Larger touch targets for mobile */
+    .admin-nav-item {
+        @apply py-4;
+    }
+
+    .admin-nav-icon {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+    }
+
+    .admin-nav-text {
+        @apply text-base;
+    }
+
+    /* Better spacing for mobile nav */
+    .admin-nav {
+        @apply px-4;
+        gap: 8px;
+    }
+
+    /* Adjust user info for mobile */
+    .admin-user-info {
+        @apply px-3 py-2;
+    }
+
+    .admin-user-avatar {
+        @apply w-8 h-8;
+    }
+
+    /* Mobile friendly logout button */
+    .admin-logout-btn {
+        @apply px-3 py-2;
+    }
+
+    /* Adjust stats cards for mobile */
+    .admin-card-grid {
+        @apply grid-cols-1 gap-4;
+    }
+
+    /* Mobile table wrapper */
+    .admin-table-wrapper {
+        @apply overflow-x-auto;
+    }
+
+    /* Pagination adjustments */
+    .pagination .page-link {
+        @apply w-9 h-9 text-xs;
     }
 }
 
@@ -390,4 +457,45 @@
 
 .admin-empty-text {
     @apply text-gray-500 text-sm;
+}
+
+/* Pagination Styles - Modern Design */
+.pagination {
+    @apply flex items-center justify-center space-x-1 mt-6;
+}
+
+.pagination .page-item {
+    @apply inline-block;
+}
+
+.pagination .page-link {
+    @apply inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-50 hover:border-purple-300 hover:text-purple-600;
+}
+
+.pagination .page-item.active .page-link {
+    @apply bg-gradient-to-r from-purple-600 to-purple-500 text-white border-purple-600 shadow-sm;
+}
+
+.pagination .page-item.disabled .page-link {
+    @apply text-gray-400 bg-gray-100 cursor-not-allowed hover:bg-gray-100 hover:border-gray-300 hover:text-gray-400;
+}
+
+.pagination .page-link:focus {
+    @apply outline-none ring-2 ring-purple-500 ring-offset-1;
+}
+
+/* Pagination Previous/Next Buttons */
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    @apply font-semibold;
+}
+
+/* Alternative Pagination Style - Pills */
+.pagination-pills .page-link {
+    @apply rounded-full;
+}
+
+/* Pagination Info Text */
+.pagination-info {
+    @apply text-center text-sm text-gray-600 mt-3;
 }
