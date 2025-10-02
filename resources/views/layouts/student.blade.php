@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Student - SMP 54 Surabaya')</title>
+    <link rel="icon" type="image/png" href="{{ asset('logo_header.png') }}">
     @vite(['resources/css/app.css', 'resources/css/student.css', 'resources/js/app.js', 'resources/js/student.js'])
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">

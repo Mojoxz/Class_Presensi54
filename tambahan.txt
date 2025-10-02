@@ -1,0 +1,5 @@
+1. foto berita kurang besar
+2. student site masih kurang untuk absen dengan keterangan lain
+3. dashboad tampilan untuk admin side
+4. terhubung dengan saya untuk di page kontak masih belum selesai
+
