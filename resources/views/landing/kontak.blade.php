@@ -3,6 +3,47 @@
 @section('title', 'Kontak - SMP 54 Surabaya')
 
 @section('content')
+
+<style>
+    /* Custom map styles */
+    #map {
+        z-index: 1;
+    }
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .leaflet-popup-tip {
+        box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-marker {
+        background: transparent;
+        border: none;
+    }
+
+    /* Zoom controls styling */
+    .leaflet-control-zoom {
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .leaflet-control-zoom a {
+        background: white !important;
+        color: #7c3aed !important;
+        border: none !important;
+        font-weight: bold !important;
+    }
+
+    .leaflet-control-zoom a:hover {
+        background: #f3f4f6 !important;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <!-- Hero Section -->
 <section class="relative min-h-screen overflow-hidden">
     <!-- Background Image Layer -->
@@ -251,24 +292,33 @@
 
         <div class="animate-on-scroll">
             <div class="news-card !p-8">
-                <!-- Placeholder for map - you can integrate with Google Maps or other map services -->
-                <div class="w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-amber-500/10"></div>
-                    <div class="text-center relative z-10">
-                        <div class="feature-icon-wrapper bg-gradient-to-br from-purple-500 to-purple-600 !w-16 !h-16 mx-auto mb-4">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Peta Lokasi SMP 54 Surabaya</h3>
-                        <p class="text-gray-600 mb-4">
-                            Jl. Raya Gubeng No. 54, Gubeng, Surabaya
-                        </p>
-                        <div class="text-sm text-gray-500 bg-white/80 rounded-lg p-3 inline-block">
-                            <strong>Catatan:</strong> Integrasi dengan Google Maps dapat ditambahkan di sini
-                        </div>
-                    </div>
+                <!-- Leaflet Map -->
+                <div id="map" class="w-full h-96 rounded-2xl shadow-lg relative overflow-hidden"></div>
+
+                <!-- Map Controls -->
+                <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Jl.+Kyai+Tambak+Deres+No.293+Bulak+Surabaya"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Buka di Google Maps</span>
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Jl.+Kyai+Tambak+Deres+No.293+Bulak+Surabaya"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="group inline-flex items-center gap-2 px-6 py-3 border-2 border-purple-600 text-purple-700 font-semibold rounded-xl hover:bg-purple-50 transition-all duration-300 transform hover:scale-105">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                        </svg>
+                        <span>Dapatkan Rute</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -308,4 +358,81 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Koordinat SMP 54 Surabaya - Bulak
+        const schoolLocation = [-7.2276747808810935, 112.78512621534176];
+
+        // Initialize map
+        const map = L.map('map', {
+            center: schoolLocation,
+            zoom: 16,
+            zoomControl: true,
+            scrollWheelZoom: true
+        });
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Custom marker icon with school colors
+        const customIcon = L.divIcon({
+            className: 'custom-marker',
+            html: `
+                <div style="position: relative;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #9333ea 0%, #f59e0b 100%); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);"></div>
+                    <div style="position: absolute; top: 8px; left: 8px; transform: rotate(45deg);">
+                        <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V7.89l7-3.11v8.21z"/>
+                        </svg>
+                    </div>
+                </div>
+            `,
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -40]
+        });
+
+        // Add marker with popup
+        const marker = L.marker(schoolLocation, { icon: customIcon }).addTo(map);
+
+        // Popup content
+        const popupContent = `
+            <div style="text-align: center; padding: 8px; min-width: 200px;">
+                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #7c3aed;">
+                    SMP 54 Surabaya
+                </h3>
+                <p style="margin: 0 0 12px 0; font-size: 13px; color: #6b7280; line-height: 1.4;">
+                    Jl. Kyai Tambak Deres No.293<br>
+                    Bulak, Kec. Bulak, Surabaya<br>
+                    Jawa Timur 60124
+                </p>
+                <a href="https://www.google.com/maps/search/?api=1&query=-7.2276747808810935,112.78512621534176"
+                   target="_blank"
+                   style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #9333ea 0%, #f59e0b 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600; transition: all 0.3s;">
+                    Lihat di Google Maps →
+                </a>
+            </div>
+        `;
+
+        marker.bindPopup(popupContent, {
+            maxWidth: 300,
+            className: 'custom-popup'
+        });
+
+        // Open popup by default
+        marker.openPopup();
+
+        // Add circle to highlight school area
+        L.circle(schoolLocation, {
+            color: '#9333ea',
+            fillColor: '#f59e0b',
+            fillOpacity: 0.1,
+            radius: 100
+        }).addTo(map);
+    });
+</script>
 @endsection
