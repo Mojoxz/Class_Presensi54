@@ -684,6 +684,339 @@ function removeFromStorage(key) {
     }
 }
 
+// Login Page Functions - Add this to resources/js/app.js
+
+// Initialize Login Page
+function initializeLoginPage() {
+    // Password Toggle
+    initializePasswordToggle();
+
+    // Form Validation
+    initializeLoginValidation();
+
+    // Add input animations
+    initializeInputAnimations();
+}
+
+// Password Toggle Functionality
+function initializePasswordToggle() {
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+    if (passwordInput && togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+
+            // Toggle icons
+            eyeIcon.classList.toggle('hidden');
+            eyeOffIcon.classList.toggle('hidden');
+
+            // Add animation
+            this.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    }
+}
+
+// Login Form Validation
+function initializeLoginValidation() {
+    const loginForm = document.querySelector('.login-form');
+    if (!loginForm) return;
+
+    // Email validation
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('blur', function() {
+            validateEmail(this);
+        });
+
+        emailInput.addEventListener('input', function() {
+            if (this.classList.contains('form-input-error')) {
+                clearInputError(this);
+            }
+        });
+    }
+
+    // Password validation
+    const passwordInput = document.getElementById('password');
+    if (passwordInput) {
+        passwordInput.addEventListener('blur', function() {
+            validatePassword(this);
+        });
+
+        passwordInput.addEventListener('input', function() {
+            if (this.classList.contains('form-input-error')) {
+                clearInputError(this);
+            }
+        });
+    }
+
+    // Kelas validation
+    const kelasSelect = document.getElementById('kelas');
+    if (kelasSelect) {
+        kelasSelect.addEventListener('change', function() {
+            validateSelect(this);
+        });
+
+        kelasSelect.addEventListener('blur', function() {
+            validateSelect(this);
+        });
+    }
+
+    // Form submit handling
+    loginForm.addEventListener('submit', function(e) {
+        let isValid = true;
+
+        if (emailInput && !validateEmail(emailInput)) {
+            isValid = false;
+        }
+
+        if (passwordInput && !validatePassword(passwordInput)) {
+            isValid = false;
+        }
+
+        if (kelasSelect && !validateSelect(kelasSelect)) {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            showNotification('Mohon lengkapi form dengan benar', 'error', 3000);
+            return false;
+        }
+
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <div class="flex items-center justify-center gap-2">
+                    <div class="spinner spinner-sm border-white"></div>
+                    <span>Memproses...</span>
+                </div>
+            `;
+
+            // Reset button after 10 seconds (fallback)
+            setTimeout(() => {
+                if (submitBtn.disabled) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalContent;
+                }
+            }, 10000);
+        }
+    });
+}
+
+// Validate Email
+function validateEmail(input) {
+    const value = input.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!value) {
+        showInputError(input, 'Email wajib diisi');
+        return false;
+    }
+
+    if (!emailRegex.test(value)) {
+        showInputError(input, 'Format email tidak valid');
+        return false;
+    }
+
+    clearInputError(input);
+    return true;
+}
+
+// Validate Password
+function validatePassword(input) {
+    const value = input.value;
+
+    if (!value) {
+        showInputError(input, 'Password wajib diisi');
+        return false;
+    }
+
+    if (value.length < 6) {
+        showInputError(input, 'Password minimal 6 karakter');
+        return false;
+    }
+
+    clearInputError(input);
+    return true;
+}
+
+// Validate Select
+function validateSelect(select) {
+    const value = select.value;
+
+    if (!value) {
+        showInputError(select, 'Kelas wajib dipilih');
+        return false;
+    }
+
+    clearInputError(select);
+    return true;
+}
+
+// Show Input Error
+function showInputError(input, message) {
+    // Clear previous error
+    clearInputError(input);
+
+    // Add error class
+    input.classList.add('form-input-error');
+
+    // Create error message
+    const errorDiv = document.createElement('p');
+    errorDiv.className = 'form-error';
+    errorDiv.textContent = message;
+    errorDiv.style.animation = 'fadeInUp 0.3s ease-out';
+
+    // Insert after input
+    input.parentNode.insertBefore(errorDiv, input.nextSibling);
+
+    // Add shake animation
+    input.style.animation = 'shake 0.4s ease-in-out';
+    setTimeout(() => {
+        input.style.animation = '';
+    }, 400);
+}
+
+// Clear Input Error
+function clearInputError(input) {
+    input.classList.remove('form-input-error');
+
+    // Remove error message
+    const formGroup = input.closest('.form-group') || input.parentNode;
+    const existingError = formGroup.querySelector('.form-error');
+    if (existingError) {
+        existingError.style.animation = 'fadeOut 0.2s ease-out';
+        setTimeout(() => existingError.remove(), 200);
+    }
+}
+
+// Input Animations
+function initializeInputAnimations() {
+    const inputs = document.querySelectorAll('.form-input, .form-select');
+
+    inputs.forEach(input => {
+        // Add focus effect
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.01)';
+            this.parentElement.style.transition = 'transform 0.2s ease';
+        });
+
+        // Remove focus effect
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+
+        // Add ripple effect on click
+        input.addEventListener('click', function(e) {
+            createRipple(e, this);
+        });
+    });
+}
+
+// Create Ripple Effect
+function createRipple(event, element) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        border-radius: 50%;
+        background: rgba(147, 51, 234, 0.1);
+        left: ${x}px;
+        top: ${y}px;
+        pointer-events: none;
+        animation: ripple 0.6s ease-out;
+    `;
+
+    // Ensure parent is positioned
+    if (element.parentElement.style.position !== 'relative') {
+        element.parentElement.style.position = 'relative';
+    }
+
+    element.parentElement.appendChild(ripple);
+
+    setTimeout(() => ripple.remove(), 600);
+}
+
+// Add shake animation keyframes
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    @keyframes ripple {
+        from {
+            transform: scale(0);
+            opacity: 0.4;
+        }
+        to {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Auto-dismiss alerts after 5 seconds
+function autoDismissAlerts() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.animation = 'fadeOut 0.5s ease-out';
+            setTimeout(() => alert.remove(), 500);
+        }, 5000);
+    });
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if we're on login page
+    if (document.querySelector('.login-page')) {
+        initializeLoginPage();
+    }
+
+    // Auto-dismiss alerts
+    autoDismissAlerts();
+});
+
+// Add to SMP54 namespace
+if (window.SMP54) {
+    window.SMP54 = {
+        ...window.SMP54,
+        // Login specific functions
+        validateEmail,
+        validatePassword,
+        validateSelect,
+        showInputError,
+        clearInputError
+    };
+}
+
+console.log('Login Page Functions Loaded ✓');
+
 // Export all functions as SMP54 namespace
 window.SMP54 = {
     // Notification functions
