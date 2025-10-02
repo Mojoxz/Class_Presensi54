@@ -105,7 +105,7 @@
                     <div class="text-xs md:text-sm text-white/90 mt-1">Layanan Online</div>
                 </div>
                 <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                    <div class="text-xl md:text-3xl font-bold text-amber-300">lt; 1h</div>
+                    <div class="text-xl md:text-3xl font-bold text-amber-300">>1h</div>
                     <div class="text-xs md:text-sm text-white/90 mt-1">Respon Time</div>
                 </div>
                 <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
