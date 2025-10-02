@@ -190,11 +190,23 @@
             </p>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+        <!-- Mobile Scroll Hint -->
+        <div class="table-scroll-hint">
+            <svg class="inline-block w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+            </svg>
+            Geser tabel ke kanan untuk melihat lebih banyak
+            <svg class="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+        </div>
+
+        <!-- Table Wrapper with Horizontal Scroll -->
+        <div class="admin-table-wrapper">
+            <table class="admin-table">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-20">
                             <input type="checkbox" id="selectAll" class="rounded border-gray-300">
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
@@ -202,20 +214,20 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50 z-20">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($murid as $item)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-6 py-4 whitespace-nowrap sticky left-0 bg-white z-10 border-r border-gray-100">
                                 <input type="checkbox" name="selected_ids[]" value="{{ $item->id }}" class="rounded border-gray-300 row-checkbox">
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {{ $item->nis }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
+                                <div class="flex items-center min-w-[200px]">
                                     <div class="flex-shrink-0 h-10 w-10">
                                         <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
                                             <span class="text-white font-medium text-sm">
@@ -254,15 +266,28 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('admin.murid.show', $item->id) }}" class="text-green-600 hover:text-green-900 font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm sticky right-0 bg-white z-10 border-l border-gray-100">
+                                <div class="flex space-x-2 min-w-[180px]">
+                                    <a href="{{ route('admin.murid.show', $item->id) }}"
+                                       class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
                                         Detail
                                     </a>
-                                    <a href="{{ route('admin.murid.edit', $item->id) }}" class="text-yellow-600 hover:text-yellow-900 font-medium">
+                                    <a href="{{ route('admin.murid.edit', $item->id) }}"
+                                       class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-yellow-600 hover:bg-yellow-700 rounded">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
                                         Edit
                                     </a>
-                                    <button onclick="deleteItem({{ $item->id }}, '{{ $item->name }}')" class="text-red-600 hover:text-red-900 font-medium">
+                                    <button onclick="deleteItem({{ $item->id }}, '{{ $item->name }}')"
+                                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
                                         Hapus
                                     </button>
                                 </div>
@@ -274,34 +299,37 @@
         </div>
 
         <!-- Bulk Actions -->
-        <div id="bulkActions" class="hidden bg-yellow-50 px-4 py-3 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <span class="text-sm text-gray-700 mr-4">
+        <div id="bulkActions" class="hidden bg-yellow-50 px-4 py-3 border-t border-gray-200">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center flex-wrap gap-2">
+                    <span class="text-sm text-gray-700">
                         <span id="selectedCount">0</span> item dipilih
                     </span>
-                    <button onclick="bulkDelete()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
+                    <button onclick="bulkDelete()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-sm font-medium">
                         Hapus Terpilih
                     </button>
                 </div>
-                <button onclick="clearSelection()" class="text-gray-500 hover:text-gray-700">
+                <button onclick="clearSelection()" class="text-sm text-gray-600 hover:text-gray-800 underline">
                     Batalkan Pilihan
                 </button>
             </div>
         </div>
 
         <!-- Pagination -->
-        <div class="px-6 py-3 border-t border-gray-200">
+        <div class="px-4 sm:px-6 py-3 border-t border-gray-200">
             {{ $murid->withQueryString()->links() }}
         </div>
     @else
-        <div class="text-center py-12">
+        <div class="text-center py-12 px-4">
             <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a4 4 0 11-8 0 4 4 0 018 0z"></path>
             </svg>
             <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada murid</h3>
             <p class="text-gray-500 mb-4">Mulai dengan menambahkan murid pertama</p>
-            <a href="{{ route('admin.murid.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <a href="{{ route('admin.murid.create') }}" class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
                 Tambah Murid
             </a>
         </div>
@@ -474,6 +502,57 @@ function exportData() {
     const exportUrl = '{{ route("admin.murid.export") }}?' + params.toString();
     window.open(exportUrl, '_blank');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const tableWrapper = document.querySelector('.admin-table-wrapper');
+    const scrollHint = document.querySelector('.table-scroll-hint');
+
+    if (tableWrapper && scrollHint) {
+        // Hide hint after user scrolls
+        let scrollTimeout;
+        tableWrapper.addEventListener('scroll', function() {
+            clearTimeout(scrollTimeout);
+            scrollHint.style.opacity = '0.5';
+
+            scrollTimeout = setTimeout(function() {
+                if (tableWrapper.scrollLeft > 50) {
+                    scrollHint.style.display = 'none';
+                } else {
+                    scrollHint.style.opacity = '1';
+                }
+            }, 1000);
+        });
+
+        // Auto-hide hint after 5 seconds on mobile
+        if (window.innerWidth <= 768) {
+            setTimeout(function() {
+                scrollHint.style.transition = 'opacity 0.5s';
+                scrollHint.style.opacity = '0.5';
+            }, 5000);
+        }
+    }
+
+    // Touch swipe enhancement for better mobile experience
+    if (tableWrapper && 'ontouchstart' in window) {
+        let startX, scrollLeft;
+
+        tableWrapper.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].pageX - tableWrapper.offsetLeft;
+            scrollLeft = tableWrapper.scrollLeft;
+        });
+
+        tableWrapper.addEventListener('touchmove', function(e) {
+            if (!startX) return;
+            const x = e.touches[0].pageX - tableWrapper.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll speed multiplier
+            tableWrapper.scrollLeft = scrollLeft - walk;
+        });
+
+        tableWrapper.addEventListener('touchend', function() {
+            startX = null;
+        });
+    }
+
 
 // Auto-hide flash messages
 setTimeout(function() {

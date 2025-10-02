@@ -317,18 +317,23 @@
     .sidebar-toggle {
         left: 20px !important;
         bottom: 20px;
+        z-index: 60;
     }
 
     .admin-header-title {
-        @apply text-lg;
+        @apply text-base;
     }
 
     .admin-content {
-        @apply p-4;
+        @apply p-3;
     }
 
     .admin-header-content {
-        @apply px-4 py-3;
+        @apply px-3 py-2 flex-wrap gap-2;
+    }
+
+    .admin-header-actions {
+        @apply flex-wrap gap-2 w-full justify-end;
     }
 
     /* Larger touch targets for mobile */
@@ -354,33 +359,182 @@
 
     /* Adjust user info for mobile */
     .admin-user-info {
-        @apply px-3 py-2;
+        @apply px-2 py-1.5 text-xs;
     }
 
     .admin-user-avatar {
-        @apply w-8 h-8;
+        @apply w-7 h-7 text-xs;
+    }
+
+    .admin-user-name {
+        @apply text-xs hidden sm:block;
     }
 
     /* Mobile friendly logout button */
     .admin-logout-btn {
-        @apply px-3 py-2;
+        @apply px-2 py-1.5 text-xs;
     }
 
     /* Adjust stats cards for mobile */
     .admin-card-grid {
-        @apply grid-cols-1 gap-4;
+        @apply grid-cols-1 gap-3;
     }
 
-    /* Mobile table wrapper */
+    .admin-stat-card {
+        @apply p-4;
+    }
+
+    .admin-stat-icon {
+        @apply w-10 h-10 mb-3;
+    }
+
+    .admin-stat-value {
+        @apply text-2xl;
+    }
+
+    /* Mobile table wrapper - CRITICAL FIX */
     .admin-table-wrapper {
-        @apply overflow-x-auto;
+        @apply -mx-3;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Add scroll indicator */
+    .admin-table-wrapper::after {
+        content: '← Geser →';
+        position: sticky;
+        right: 0;
+        bottom: 0;
+        padding: 8px 12px;
+        background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.1) 20%, rgba(59, 130, 246, 0.2) 100%);
+        color: rgb(59, 130, 246);
+        font-size: 11px;
+        font-weight: 600;
+        text-align: center;
+        border-top: 1px solid rgba(59, 130, 246, 0.2);
+        display: block;
+    }
+
+    /* Table styling for mobile */
+    .admin-table {
+        min-width: 800px; /* Force horizontal scroll */
+    }
+
+    .admin-table thead th {
+        @apply px-3 py-2 text-xs sticky top-0 bg-gray-50 z-10;
+    }
+
+    .admin-table tbody td {
+        @apply px-3 py-3 text-xs;
+    }
+
+    /* Mobile form inputs */
+    .admin-form-input {
+        @apply text-sm;
     }
 
     /* Pagination adjustments */
+    .pagination {
+        @apply flex-wrap gap-1;
+    }
+
     .pagination .page-link {
-        @apply w-9 h-9 text-xs;
+        @apply w-8 h-8 text-xs;
+    }
+
+    /* Mobile buttons - stack vertically */
+    .flex.space-x-2 {
+        @apply flex-col space-x-0 space-y-2 w-full;
+    }
+
+    .flex.space-x-2 > * {
+        @apply w-full justify-center;
+    }
+
+    /* Filter form mobile */
+    .flex.flex-wrap.items-center.gap-4 {
+        @apply flex-col items-stretch gap-2;
+    }
+
+    .flex.flex-wrap.items-center.gap-4 > * {
+        @apply w-full;
+    }
+
+    /* Modal adjustments */
+    #importModal > div,
+    #deleteModal > div {
+        @apply w-11/12 max-w-sm mx-3;
+    }
+
+    /* Alert mobile */
+    .admin-alert {
+        @apply text-sm px-3 py-3;
+    }
+
+    /* Button groups mobile */
+    .admin-btn {
+        @apply text-sm px-3 py-2;
     }
 }
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .admin-sidebar {
+        width: 240px;
+    }
+
+    .admin-main-wrapper {
+        margin-left: 240px;
+    }
+
+    .sidebar-toggle {
+        left: 200px;
+    }
+
+    .admin-card-grid {
+        @apply grid-cols-2;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Make checkbox column sticky on mobile */
+    .admin-table tbody tr td:first-child {
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 10;
+        box-shadow: 2px 0 4px rgba(0,0,0,0.05);
+    }
+
+    /* Make action column sticky on mobile */
+    .admin-table tbody tr td:last-child {
+        position: sticky;
+        right: 0;
+        background: white;
+        z-index: 10;
+        box-shadow: -2px 0 4px rgba(0,0,0,0.05);
+    }
+
+    /* Reduce padding on mobile */
+    .admin-table thead th,
+    .admin-table tbody td {
+        padding: 0.5rem 0.75rem !important;
+    }
+
+    /* Better button sizing for mobile */
+    .admin-table tbody td:last-child .flex {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: stretch;
+    }
+
+    .admin-table tbody td:last-child .flex a,
+    .admin-table tbody td:last-child .flex button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 
 /* Sidebar Overlay for Mobile */
 .sidebar-overlay {
