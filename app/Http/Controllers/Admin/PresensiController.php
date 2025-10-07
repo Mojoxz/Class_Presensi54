@@ -15,7 +15,7 @@ class PresensiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Presensi::with(['user', 'user.kelas']);
+        $query = Presensi::with(['user', 'user.kelas', 'approver', 'rejecter']);
 
         // Filter berdasarkan tanggal
         if ($request->has('tanggal') && $request->tanggal) {
@@ -36,10 +36,32 @@ class PresensiController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter berdasarkan approval status
+        if ($request->has('approval_status') && $request->approval_status) {
+            if ($request->approval_status === 'pending') {
+                $query->pendingApproval();
+            } elseif ($request->approval_status === 'approved') {
+                $query->approved();
+            } elseif ($request->approval_status === 'rejected') {
+                $query->rejected();
+            }
+        }
+
         $presensi = $query->latest()->paginate(20);
         $kelas = Kelas::all();
 
-        return view('admin.presensi.index', compact('presensi', 'kelas'));
+        // Statistik hari ini (atau tanggal yang dipilih)
+        $tanggal = $request->get('tanggal', Carbon::today()->format('Y-m-d'));
+        $statistik = [
+            'total' => Presensi::whereDate('tanggal', $tanggal)->count(),
+            'hadir' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'hadir')->count(),
+            'izin' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'izin')->count(),
+            'sakit' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'sakit')->count(),
+            'tidak_hadir' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'tidak_hadir')->count(),
+            'pending' => Presensi::whereDate('tanggal', $tanggal)->pendingApproval()->count(),
+        ];
+
+        return view('admin.presensi.index', compact('presensi', 'kelas', 'statistik'));
     }
 
     public function rekap(Request $request)
@@ -64,13 +86,20 @@ class PresensiController extends Controller
         // Hitung statistik
         $rekapData = $siswa->map(function($s) {
             $presensi = $s->presensi;
+            $hadir = $presensi->where('status', 'hadir')->count();
+            $total = $presensi->count();
+
             return [
                 'siswa' => $s,
-                'total' => $presensi->count(),
-                'hadir' => $presensi->where('status', 'hadir')->count(),
+                'total' => $total,
+                'hadir' => $hadir,
                 'tidak_hadir' => $presensi->where('status', 'tidak_hadir')->count(),
                 'izin' => $presensi->where('status', 'izin')->count(),
                 'sakit' => $presensi->where('status', 'sakit')->count(),
+                'terlambat' => $presensi->where('status', 'hadir')->filter(function($p) {
+                    return $p->keterangan && str_contains($p->keterangan, 'Terlambat');
+                })->count(),
+                'persentase' => $total > 0 ? round(($hadir / $total) * 100, 2) : 0,
             ];
         });
 
@@ -85,6 +114,7 @@ class PresensiController extends Controller
         $siswa = User::with('kelas')->findOrFail($userId);
 
         $presensi = Presensi::where('user_id', $userId)
+                            ->with(['approver', 'rejecter'])
                             ->whereMonth('tanggal', $bulan)
                             ->whereYear('tanggal', $tahun)
                             ->orderBy('tanggal', 'desc')
@@ -97,6 +127,12 @@ class PresensiController extends Controller
             'tidak_hadir' => $presensi->where('status', 'tidak_hadir')->count(),
             'izin' => $presensi->where('status', 'izin')->count(),
             'sakit' => $presensi->where('status', 'sakit')->count(),
+            'terlambat' => $presensi->where('status', 'hadir')->filter(function($p) {
+                return $p->keterangan && str_contains($p->keterangan, 'Terlambat');
+            })->count(),
+            'pending' => $presensi->filter(function($p) {
+                return $p->approval_status === 'pending';
+            })->count(),
         ];
 
         return view('admin.presensi.detail', compact('siswa', 'presensi', 'statistik', 'bulan', 'tahun'));
@@ -112,5 +148,106 @@ class PresensiController extends Controller
         $filename = "Rekap_Presensi_{$namaBulan}_{$tahun}.xlsx";
 
         return Excel::download(new PresensiExport($bulan, $tahun, $kelasId), $filename);
+    }
+
+    /**
+     * Approve pengajuan izin/sakit
+     */
+    public function approve($id)
+    {
+        try {
+            $presensi = Presensi::findOrFail($id);
+
+            // Validasi: hanya izin/sakit yang bisa di-approve
+            if (!in_array($presensi->status, ['izin', 'sakit'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Presensi ini tidak memerlukan persetujuan'
+                ], 400);
+            }
+
+            // Validasi: tidak bisa approve yang sudah pernah di-approve/reject
+            if ($presensi->is_approved !== null) {
+                $status = $presensi->is_approved ? 'disetujui' : 'ditolak';
+                return response()->json([
+                    'success' => false,
+                    'message' => "Presensi ini sudah {$status} sebelumnya"
+                ], 400);
+            }
+
+            $presensi->update([
+                'is_approved' => true,
+                'approved_at' => Carbon::now(),
+                'approved_by' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengajuan ' . $presensi->status . ' berhasil disetujui'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Reject pengajuan izin/sakit
+     */
+    public function reject(Request $request, $id)
+    {
+        try {
+            $presensi = Presensi::findOrFail($id);
+
+            // Validasi: hanya izin/sakit yang bisa di-reject
+            if (!in_array($presensi->status, ['izin', 'sakit'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Presensi ini tidak dapat ditolak'
+                ], 400);
+            }
+
+            // Validasi: tidak bisa reject yang sudah pernah di-approve/reject
+            if ($presensi->is_approved !== null) {
+                $status = $presensi->is_approved ? 'disetujui' : 'ditolak';
+                return response()->json([
+                    'success' => false,
+                    'message' => "Presensi ini sudah {$status} sebelumnya"
+                ], 400);
+            }
+
+            // Validasi input alasan penolakan
+            $request->validate([
+                'alasan_penolakan' => 'required|string|min:10|max:500'
+            ]);
+
+            $presensi->update([
+                'is_approved' => false,
+                'status' => 'tidak_hadir', // Ubah status jadi tidak hadir
+                'alasan_penolakan' => $request->alasan_penolakan,
+                'rejected_at' => Carbon::now(),
+                'rejected_by' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengajuan berhasil ditolak'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Alasan penolakan minimal 10 karakter',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

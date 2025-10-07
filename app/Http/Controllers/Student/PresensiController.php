@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class PresensiController extends Controller
 {
@@ -36,11 +37,20 @@ class PresensiController extends Controller
         $bolehMasuk = $jamSekarang->between($jamBukaMasuk, $jamTutupMasuk);
         $bolehKeluar = $jamSekarang->between($jamBukaKeluar, $jamTutupKeluar);
 
+        // Statistik presensi bulan ini
+        $statistik = [
+            'hadir' => $presensiRiwayat->where('status', 'hadir')->count(),
+            'izin' => $presensiRiwayat->where('status', 'izin')->count(),
+            'sakit' => $presensiRiwayat->where('status', 'sakit')->count(),
+            'tidak_hadir' => $presensiRiwayat->where('status', 'tidak_hadir')->count(),
+        ];
+
         return view('student.presensi', compact(
             'presensiHariIni',
             'presensiRiwayat',
             'bolehMasuk',
-            'bolehKeluar'
+            'bolehKeluar',
+            'statistik'
         ));
     }
 
@@ -67,7 +77,7 @@ class PresensiController extends Controller
         if ($existingPresensi) {
             return response()->json([
                 'success' => false,
-                'message' => 'Anda sudah melakukan presensi masuk hari ini'
+                'message' => 'Anda sudah melakukan presensi hari ini'
             ], 400);
         }
 
@@ -76,8 +86,8 @@ class PresensiController extends Controller
             'foto_masuk' => 'required|string'
         ]);
 
-        // Simpan foto dari base64
-        $fotoPath = $this->saveBase64Image($request->foto_masuk, 'presensi/masuk');
+        // Simpan foto dengan watermark
+        $fotoPath = $this->saveBase64ImageWithWatermark($request->foto_masuk, 'presensi/masuk');
 
         if (!$fotoPath) {
             return response()->json([
@@ -153,8 +163,8 @@ class PresensiController extends Controller
             'foto_keluar' => 'required|string'
         ]);
 
-        // Simpan foto dari base64
-        $fotoPath = $this->saveBase64Image($request->foto_keluar, 'presensi/keluar');
+        // Simpan foto dengan watermark
+        $fotoPath = $this->saveBase64ImageWithWatermark($request->foto_keluar, 'presensi/keluar');
 
         if (!$fotoPath) {
             return response()->json([
@@ -174,6 +184,98 @@ class PresensiController extends Controller
             'data' => [
                 'jam_keluar' => $jamSekarang->format('H:i:s')
             ]
+        ]);
+    }
+
+    public function izin(Request $request)
+    {
+        $user = auth()->user();
+        $today = Carbon::today();
+
+        // Cek apakah sudah ada presensi hari ini
+        $existingPresensi = Presensi::getPresensiToday($user->id);
+
+        if ($existingPresensi) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah melakukan presensi untuk hari ini'
+            ], 400);
+        }
+
+        // Validasi input
+        $request->validate([
+            'alasan' => 'required|string|min:10|max:500',
+            'foto_bukti' => 'required|string'
+        ]);
+
+        // Simpan foto bukti dengan watermark
+        $fotoPath = $this->saveBase64ImageWithWatermark($request->foto_bukti, 'presensi/izin');
+
+        if (!$fotoPath) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan foto bukti'
+            ], 500);
+        }
+
+        Presensi::create([
+            'user_id' => $user->id,
+            'tanggal' => $today,
+            'status' => 'izin',
+            'alasan' => $request->alasan,
+            'foto_bukti' => $fotoPath,
+            'keterangan' => 'Izin - ' . Str::limit($request->alasan, 50)
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengajuan izin berhasil dikirim dan menunggu persetujuan admin',
+        ]);
+    }
+
+    public function sakit(Request $request)
+    {
+        $user = auth()->user();
+        $today = Carbon::today();
+
+        // Cek apakah sudah ada presensi hari ini
+        $existingPresensi = Presensi::getPresensiToday($user->id);
+
+        if ($existingPresensi) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah melakukan presensi untuk hari ini'
+            ], 400);
+        }
+
+        // Validasi input
+        $request->validate([
+            'alasan' => 'required|string|min:10|max:500',
+            'foto_bukti' => 'required|string'
+        ]);
+
+        // Simpan foto bukti surat sakit dengan watermark
+        $fotoPath = $this->saveBase64ImageWithWatermark($request->foto_bukti, 'presensi/sakit');
+
+        if (!$fotoPath) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan foto surat sakit'
+            ], 500);
+        }
+
+        Presensi::create([
+            'user_id' => $user->id,
+            'tanggal' => $today,
+            'status' => 'sakit',
+            'alasan' => $request->alasan,
+            'foto_bukti' => $fotoPath,
+            'keterangan' => 'Sakit - ' . Str::limit($request->alasan, 50)
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengajuan sakit berhasil dikirim dan menunggu persetujuan admin',
         ]);
     }
 
@@ -208,6 +310,119 @@ class PresensiController extends Controller
             return $filePath;
         } catch (\Exception $e) {
             \Log::error('Error saving image: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Helper function untuk menyimpan gambar base64 dengan watermark
+     */
+    private function saveBase64ImageWithWatermark($base64String, $path)
+    {
+        try {
+            // Hapus prefix data:image/...;base64, jika ada
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64String, $type)) {
+                $base64String = substr($base64String, strpos($base64String, ',') + 1);
+                $type = strtolower($type[1]); // jpg, png, gif
+            } else {
+                return false;
+            }
+
+            // Decode base64
+            $imageData = base64_decode($base64String);
+
+            if ($imageData === false) {
+                return false;
+            }
+
+            // Generate nama file unik
+            $fileName = Str::random(40) . '.jpg';
+            $filePath = $path . '/' . $fileName;
+
+            // Buat temporary file
+            $tempPath = storage_path('app/temp/' . $fileName);
+
+            // Pastikan direktori temp ada
+            if (!file_exists(storage_path('app/temp'))) {
+                mkdir(storage_path('app/temp'), 0755, true);
+            }
+
+            file_put_contents($tempPath, $imageData);
+
+            // Gunakan GD Library untuk watermark (alternatif jika Intervention Image tidak tersedia)
+            $image = imagecreatefromstring($imageData);
+
+            if ($image !== false) {
+                $width = imagesx($image);
+                $height = imagesy($image);
+
+                // Watermark text
+                $watermarkText = Carbon::now()->format('d/m/Y H:i:s');
+                $userName = auth()->user()->name;
+
+                // Warna watermark (putih dengan transparansi)
+                $textColor = imagecolorallocatealpha($image, 255, 255, 255, 30);
+                $bgColor = imagecolorallocatealpha($image, 0, 0, 0, 70);
+
+                // Font size dan posisi
+                $fontSize = 4; // GD font size (1-5)
+                $padding = 10;
+                $textWidth = imagefontwidth($fontSize) * strlen($watermarkText);
+                $textHeight = imagefontheight($fontSize);
+
+                // Background untuk watermark
+                imagefilledrectangle(
+                    $image,
+                    $padding,
+                    $height - $textHeight - ($padding * 3),
+                    $textWidth + ($padding * 2),
+                    $height - $padding,
+                    $bgColor
+                );
+
+                // Tambahkan tanggal
+                imagestring(
+                    $image,
+                    $fontSize,
+                    $padding * 2,
+                    $height - $textHeight - ($padding * 2),
+                    $watermarkText,
+                    $textColor
+                );
+
+                // Tambahkan nama user di bawah tanggal
+                imagestring(
+                    $image,
+                    $fontSize,
+                    $padding * 2,
+                    $height - ($padding * 2) + 2,
+                    $userName,
+                    $textColor
+                );
+
+                // Simpan gambar dengan watermark
+                ob_start();
+                imagejpeg($image, null, 85);
+                $imageWithWatermark = ob_get_clean();
+                imagedestroy($image);
+
+                // Simpan ke storage
+                Storage::disk('public')->put($filePath, $imageWithWatermark);
+
+                // Hapus temporary file
+                @unlink($tempPath);
+
+                return $filePath;
+            }
+
+            // Fallback: simpan tanpa watermark jika gagal
+            Storage::disk('public')->put($filePath, $imageData);
+            @unlink($tempPath);
+
+            return $filePath;
+
+        } catch (\Exception $e) {
+            \Log::error('Error saving image with watermark: ' . $e->getMessage());
             return false;
         }
     }

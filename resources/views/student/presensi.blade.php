@@ -13,97 +13,205 @@
     </div>
 </div>
 
+<!-- Statistik Presensi Bulan Ini -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-green-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Hadir</p>
+                <p class="text-2xl font-bold text-green-600">{{ $statistik['hadir'] }}</p>
+            </div>
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-yellow-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Izin</p>
+                <p class="text-2xl font-bold text-yellow-600">{{ $statistik['izin'] }}</p>
+            </div>
+            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-blue-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Sakit</p>
+                <p class="text-2xl font-bold text-blue-600">{{ $statistik['sakit'] }}</p>
+            </div>
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-red-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Tidak Hadir</p>
+                <p class="text-2xl font-bold text-red-600">{{ $statistik['tidak_hadir'] }}</p>
+            </div>
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Presensi Actions -->
 <div class="bg-white rounded-xl shadow-xl p-6 mb-8">
     <h3 class="text-xl font-semibold text-gray-900 mb-6">Presensi Hari Ini</h3>
 
     @if($presensiHariIni)
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Status Presensi Masuk -->
-            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-300 shadow-md">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <h4 class="text-lg font-bold text-green-900 mb-2">Presensi Masuk</h4>
-                    <p class="text-green-700 mb-2">Status: <span class="font-semibold capitalize">{{ $presensiHariIni->status }}</span></p>
-                    <p class="text-2xl font-bold text-green-800 mb-3">
-                        {{ $presensiHariIni->jam_masuk ? $presensiHariIni->jam_masuk->format('H:i:s') : '-' }}
-                    </p>
-
-                    @if($presensiHariIni->foto_masuk)
-                        <div class="mt-4">
-                            <img src="{{ asset('storage/' . $presensiHariIni->foto_masuk) }}"
-                                 alt="Foto Masuk"
-                                 class="w-32 h-32 object-cover rounded-lg mx-auto border-4 border-green-300 shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                                 onclick="showImageModal('{{ asset('storage/' . $presensiHariIni->foto_masuk) }}')">
-                            <p class="text-xs text-green-600 mt-2">Klik untuk memperbesar</p>
+            <!-- Status Presensi Masuk atau Izin/Sakit -->
+            @if(in_array($presensiHariIni->status, ['izin', 'sakit']))
+                <div class="lg:col-span-2 bg-gradient-to-br {{ $presensiHariIni->status === 'izin' ? 'from-yellow-50 to-yellow-100 border-yellow-300' : 'from-blue-50 to-blue-100 border-blue-300' }} p-6 rounded-xl border-2 shadow-md">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-20 h-20 bg-gradient-to-br {{ $presensiHariIni->status === 'izin' ? 'from-yellow-400 to-yellow-600' : 'from-blue-400 to-blue-600' }} rounded-full flex items-center justify-center shadow-lg">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                @if($presensiHariIni->status === 'izin')
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                @else
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                @endif
+                            </svg>
                         </div>
-                    @endif
-
-                    @if($presensiHariIni->keterangan)
-                        <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
-                            <p class="text-sm text-yellow-800">
-                                <span class="font-medium">⚠️ {{ $presensiHariIni->keterangan }}</span>
-                            </p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Status Presensi Keluar -->
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 {{ $presensiHariIni->jam_keluar ? 'border-purple-300' : 'border-gray-300' }} shadow-md">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-20 h-20 bg-gradient-to-br {{ $presensiHariIni->jam_keluar ? 'from-purple-400 to-purple-600' : 'from-gray-300 to-gray-400' }} rounded-full flex items-center justify-center shadow-lg">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
                     </div>
-                </div>
-                <div class="text-center">
-                    <h4 class="text-lg font-bold {{ $presensiHariIni->jam_keluar ? 'text-purple-900' : 'text-gray-700' }} mb-2">Presensi Keluar</h4>
-
-                    @if($presensiHariIni->jam_keluar)
-                        <p class="text-2xl font-bold text-purple-800 mb-3">
-                            {{ $presensiHariIni->jam_keluar->format('H:i:s') }}
+                    <div class="text-center">
+                        <h4 class="text-lg font-bold {{ $presensiHariIni->status === 'izin' ? 'text-yellow-900' : 'text-blue-900' }} mb-2">
+                            Status: {{ ucfirst($presensiHariIni->status) }}
+                        </h4>
+                        <p class="{{ $presensiHariIni->status === 'izin' ? 'text-yellow-700' : 'text-blue-700' }} mb-2">
+                            Menunggu persetujuan admin
                         </p>
 
-                        @if($presensiHariIni->foto_keluar)
-                            <div class="mt-4">
-                                <img src="{{ asset('storage/' . $presensiHariIni->foto_keluar) }}"
-                                     alt="Foto Keluar"
-                                     class="w-32 h-32 object-cover rounded-lg mx-auto border-4 border-purple-300 shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                                     onclick="showImageModal('{{ asset('storage/' . $presensiHariIni->foto_keluar) }}')">
-                                <p class="text-xs text-purple-600 mt-2">Klik untuk memperbesar</p>
+                        @if($presensiHariIni->alasan)
+                            <div class="mt-4 p-4 bg-white bg-opacity-50 rounded-lg text-left">
+                                <p class="text-sm font-semibold {{ $presensiHariIni->status === 'izin' ? 'text-yellow-900' : 'text-blue-900' }} mb-2">
+                                    Alasan:
+                                </p>
+                                <p class="text-sm {{ $presensiHariIni->status === 'izin' ? 'text-yellow-800' : 'text-blue-800' }}">
+                                    {{ $presensiHariIni->alasan }}
+                                </p>
                             </div>
                         @endif
-                    @else
-                        <p class="text-gray-500 mb-4">Belum presensi keluar</p>
 
-                        @if($bolehKeluar)
-                            <button onclick="openCameraModal('keluar')" class="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                Presensi Keluar
-                            </button>
-                        @else
-                            <div class="bg-gray-100 border border-gray-300 rounded-lg p-4">
-                                <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <p class="text-sm text-gray-600 font-medium">Presensi keluar hanya bisa dilakukan</p>
-                                <p class="text-sm text-gray-600">antara jam 14:00 - 18:00</p>
+                        @if($presensiHariIni->foto_bukti)
+                            <div class="mt-4">
+                                <p class="text-sm font-semibold {{ $presensiHariIni->status === 'izin' ? 'text-yellow-900' : 'text-blue-900' }} mb-2">
+                                    Bukti {{ ucfirst($presensiHariIni->status) }}:
+                                </p>
+                                <img src="{{ asset('storage/' . $presensiHariIni->foto_bukti) }}"
+                                     alt="Foto Bukti"
+                                     class="w-48 h-48 object-cover rounded-lg mx-auto border-4 {{ $presensiHariIni->status === 'izin' ? 'border-yellow-300' : 'border-blue-300' }} shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                                     onclick="showImageModal('{{ asset('storage/' . $presensiHariIni->foto_bukti) }}')">
+                                <p class="text-xs {{ $presensiHariIni->status === 'izin' ? 'text-yellow-600' : 'text-blue-600' }} mt-2">Klik untuk memperbesar</p>
                             </div>
                         @endif
-                    @endif
+                    </div>
                 </div>
-            </div>
+            @else
+                <!-- Status Presensi Masuk -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-300 shadow-md">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="text-lg font-bold text-green-900 mb-2">Presensi Masuk</h4>
+                        <p class="text-green-700 mb-2">Status: <span class="font-semibold capitalize">{{ $presensiHariIni->status }}</span></p>
+                        <p class="text-2xl font-bold text-green-800 mb-3">
+                            {{ $presensiHariIni->jam_masuk ? $presensiHariIni->jam_masuk->format('H:i:s') : '-' }}
+                        </p>
+
+                        @if($presensiHariIni->foto_masuk)
+                            <div class="mt-4">
+                                <img src="{{ asset('storage/' . $presensiHariIni->foto_masuk) }}"
+                                     alt="Foto Masuk"
+                                     class="w-32 h-32 object-cover rounded-lg mx-auto border-4 border-green-300 shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                                     onclick="showImageModal('{{ asset('storage/' . $presensiHariIni->foto_masuk) }}')">
+                                <p class="text-xs text-green-600 mt-2">Klik untuk memperbesar</p>
+                            </div>
+                        @endif
+
+                        @if($presensiHariIni->keterangan)
+                            <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
+                                <p class="text-sm text-yellow-800">
+                                    <span class="font-medium">⚠️ {{ $presensiHariIni->keterangan }}</span>
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Status Presensi Keluar -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 {{ $presensiHariIni->jam_keluar ? 'border-purple-300' : 'border-gray-300' }} shadow-md">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-20 h-20 bg-gradient-to-br {{ $presensiHariIni->jam_keluar ? 'from-purple-400 to-purple-600' : 'from-gray-300 to-gray-400' }} rounded-full flex items-center justify-center shadow-lg">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="text-lg font-bold {{ $presensiHariIni->jam_keluar ? 'text-purple-900' : 'text-gray-700' }} mb-2">Presensi Keluar</h4>
+
+                        @if($presensiHariIni->jam_keluar)
+                            <p class="text-2xl font-bold text-purple-800 mb-3">
+                                {{ $presensiHariIni->jam_keluar->format('H:i:s') }}
+                            </p>
+
+                            @if($presensiHariIni->foto_keluar)
+                                <div class="mt-4">
+                                    <img src="{{ asset('storage/' . $presensiHariIni->foto_keluar) }}"
+                                         alt="Foto Keluar"
+                                         class="w-32 h-32 object-cover rounded-lg mx-auto border-4 border-purple-300 shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                                         onclick="showImageModal('{{ asset('storage/' . $presensiHariIni->foto_keluar) }}')">
+                                    <p class="text-xs text-purple-600 mt-2">Klik untuk memperbesar</p>
+                                </div>
+                            @endif
+                        @else
+                            <p class="text-gray-500 mb-4">Belum presensi keluar</p>
+
+                            @if($bolehKeluar)
+                                <button onclick="openCameraModal('keluar')" class="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    Presensi Keluar
+                                </button>
+                            @else
+                                <div class="bg-gray-100 border border-gray-300 rounded-lg p-4">
+                                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <p class="text-sm text-gray-600 font-medium">Presensi keluar hanya bisa dilakukan</p>
+                                    <p class="text-sm text-gray-600">antara jam 14:00 - 18:00</p>
+                                </div>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            @endif
         </div>
     @else
         <div class="text-center py-8">
@@ -116,13 +224,29 @@
                     <p class="text-gray-600 mb-6">Silakan lakukan presensi masuk untuk hari ini</p>
                 </div>
 
-                <button onclick="openCameraModal('masuk')" class="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                    <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    Presensi Masuk Sekarang
-                </button>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="openCameraModal('masuk')" class="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Presensi Masuk
+                    </button>
+
+                    <button onclick="openIzinModal()" class="bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Ajukan Izin
+                    </button>
+
+                    <button onclick="openSakitModal()" class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                        </svg>
+                        Lapor Sakit
+                    </button>
+                </div>
 
                 <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-md mx-auto">
                     <p class="text-sm text-blue-800">
@@ -133,13 +257,29 @@
                     </p>
                 </div>
             @else
-                <div class="bg-red-50 border-2 border-red-200 rounded-xl p-8 max-w-md mx-auto">
+                <div class="bg-red-50 border-2 border-red-200 rounded-xl p-8 max-w-md mx-auto mb-6">
                     <svg class="w-20 h-20 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <h3 class="text-xl font-bold text-red-900 mb-2">Presensi Ditutup</h3>
+                    <h3 class="text-xl font-bold text-red-900 mb-2">Presensi Masuk Ditutup</h3>
                     <p class="text-red-700 mb-4">Presensi masuk hanya bisa dilakukan antara jam 06:00 - 08:30</p>
                     <p class="text-sm text-red-600">Silakan hubungi admin jika ada kendala</p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="openIzinModal()" class="bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Ajukan Izin
+                    </button>
+
+                    <button onclick="openSakitModal()" class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                        </svg>
+                        Lapor Sakit
+                    </button>
                 </div>
             @endif
         </div>
@@ -199,10 +339,24 @@
                                              onclick="showImageModal('{{ asset('storage/' . $presensi->foto_keluar) }}')"
                                              title="Foto Keluar">
                                     @endif
+                                    @if($presensi->foto_bukti)
+                                        <img src="{{ asset('storage/' . $presensi->foto_bukti) }}"
+                                             alt="Bukti"
+                                             class="w-10 h-10 object-cover rounded cursor-pointer hover:scale-110 transition-transform border-2 {{ $presensi->status === 'izin' ? 'border-yellow-300' : 'border-blue-300' }}"
+                                             onclick="showImageModal('{{ asset('storage/' . $presensi->foto_bukti) }}')"
+                                             title="Foto Bukti {{ ucfirst($presensi->status) }}">
+                                    @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
-                                {{ $presensi->keterangan ?? '-' }}
+                                @if($presensi->alasan)
+                                    <button onclick="showAlasanModal('{{ $presensi->status }}', '{{ addslashes($presensi->alasan) }}')"
+                                            class="text-blue-600 hover:text-blue-800 underline">
+                                        Lihat Detail
+                                    </button>
+                                @else
+                                    {{ $presensi->keterangan ?? '-' }}
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -219,7 +373,7 @@
     @endif
 </div>
 
-<!-- Modal Kamera -->
+<!-- Modal Kamera untuk Presensi Masuk/Keluar -->
 <div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-xl max-w-2xl w-full p-6">
         <div class="flex justify-between items-center mb-4">
@@ -271,6 +425,134 @@
     </div>
 </div>
 
+<!-- Modal Izin -->
+<div id="izinModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900">Ajukan Izin</h3>
+            <button onclick="closeIzinModal()" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Alasan Izin *</label>
+                <textarea id="alasanIzin" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent" placeholder="Jelaskan alasan izin Anda (minimal 10 karakter)"></textarea>
+                <p class="text-xs text-gray-500 mt-1">Contoh: Acara keluarga, keperluan mendadak, dll.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Foto Bukti Izin * (Surat/Screenshot/Dokumen)</label>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                    <div id="izinPreview" class="hidden mb-4">
+                        <img id="izinPhoto" src="" alt="Preview" class="w-full rounded-lg">
+                    </div>
+                    <video id="izinCamera" class="w-full rounded-lg bg-gray-900 mb-4 hidden" autoplay playsinline></video>
+                    <canvas id="izinCanvas" class="hidden"></canvas>
+
+                    <div class="text-center">
+                        <button id="startIzinCameraBtn" onclick="startIzinCamera()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                            </svg>
+                            Buka Kamera
+                        </button>
+                        <button id="captureIzinBtn" onclick="captureIzinPhoto()" class="hidden bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Ambil Foto
+                        </button>
+                        <button id="retakeIzinBtn" onclick="retakeIzinPhoto()" class="hidden bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Ambil Ulang
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="izinLoadingIndicator" class="hidden text-center py-4">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-yellow-600 border-t-transparent"></div>
+                <p class="mt-2 text-gray-600">Mengirim pengajuan izin...</p>
+            </div>
+
+            <button onclick="submitIzin()" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 text-white px-6 py-3 rounded-lg font-bold transition-all duration-200 shadow-lg">
+                Kirim Pengajuan Izin
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sakit -->
+<div id="sakitModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900">Lapor Sakit</h3>
+            <button onclick="closeSakitModal()" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Keterangan Sakit *</label>
+                <textarea id="alasanSakit" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Jelaskan kondisi/keluhan Anda (minimal 10 karakter)"></textarea>
+                <p class="text-xs text-gray-500 mt-1">Contoh: Demam tinggi, sakit kepala, flu, dll.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Foto Surat Sakit * (Dari Dokter/Klinik/Puskesmas)</label>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                    <div id="sakitPreview" class="hidden mb-4">
+                        <img id="sakitPhoto" src="" alt="Preview" class="w-full rounded-lg">
+                    </div>
+                    <video id="sakitCamera" class="w-full rounded-lg bg-gray-900 mb-4 hidden" autoplay playsinline></video>
+                    <canvas id="sakitCanvas" class="hidden"></canvas>
+
+                    <div class="text-center">
+                        <button id="startSakitCameraBtn" onclick="startSakitCamera()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                            </svg>
+                            Buka Kamera
+                        </button>
+                        <button id="captureSakitBtn" onclick="captureSakitPhoto()" class="hidden bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Ambil Foto
+                        </button>
+                        <button id="retakeSakitBtn" onclick="retakeSakitPhoto()" class="hidden bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Ambil Ulang
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sakitLoadingIndicator" class="hidden text-center py-4">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
+                <p class="mt-2 text-gray-600">Mengirim laporan sakit...</p>
+            </div>
+
+            <button onclick="submitSakit()" class="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-bold transition-all duration-200 shadow-lg">
+                Kirim Laporan Sakit
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- Modal untuk melihat gambar -->
 <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4" onclick="closeImageModal()">
     <div class="relative max-w-4xl max-h-full">
@@ -283,10 +565,31 @@
     </div>
 </div>
 
+<!-- Modal untuk melihat alasan detail -->
+<div id="alasanModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4" onclick="closeAlasanModal()">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900" id="alasanTitle">Detail Alasan</h3>
+            <button onclick="closeAlasanModal()" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+            <p class="text-gray-800" id="alasanContent"></p>
+        </div>
+    </div>
+</div>
+
 <script>
     let stream = null;
     let capturedImageData = null;
     let presensiType = null; // 'masuk' atau 'keluar'
+    let izinStream = null;
+    let sakitStream = null;
+    let izinImageData = null;
+    let sakitImageData = null;
 
     function updateDateTime() {
         const now = new Date();
@@ -306,6 +609,7 @@
         document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', dateOptions);
     }
 
+    // ===== PRESENSI MASUK/KELUAR FUNCTIONS =====
     async function openCameraModal(type) {
         presensiType = type;
         const modal = document.getElementById('cameraModal');
@@ -347,18 +651,14 @@
         const retakeBtn = document.getElementById('retakeBtn');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Set canvas size to match video
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        // Draw video frame to canvas
         const context = canvas.getContext('2d');
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Convert canvas to base64
         capturedImageData = canvas.toDataURL('image/jpeg', 0.8);
 
-        // Show captured image
         photo.src = capturedImageData;
         video.classList.add('hidden');
         capturedImage.classList.remove('hidden');
@@ -366,7 +666,6 @@
         retakeBtn.classList.remove('hidden');
         submitBtn.classList.remove('hidden');
 
-        // Stop camera stream
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
         }
@@ -386,7 +685,6 @@
         retakeBtn.classList.add('hidden');
         submitBtn.classList.add('hidden');
 
-        // Restart camera
         openCameraModal(presensiType);
     }
 
@@ -448,7 +746,6 @@
         const modal = document.getElementById('cameraModal');
         modal.classList.add('hidden');
 
-        // Stop camera stream
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             stream = null;
@@ -458,6 +755,257 @@
         presensiType = null;
     }
 
+    // ===== IZIN FUNCTIONS =====
+    function openIzinModal() {
+        document.getElementById('izinModal').classList.remove('hidden');
+        document.getElementById('alasanIzin').value = '';
+        izinImageData = null;
+        document.getElementById('izinPreview').classList.add('hidden');
+    }
+
+    function closeIzinModal() {
+        document.getElementById('izinModal').classList.add('hidden');
+        if (izinStream) {
+            izinStream.getTracks().forEach(track => track.stop());
+            izinStream = null;
+        }
+        document.getElementById('izinCamera').classList.add('hidden');
+        document.getElementById('startIzinCameraBtn').classList.remove('hidden');
+        document.getElementById('captureIzinBtn').classList.add('hidden');
+        document.getElementById('retakeIzinBtn').classList.add('hidden');
+    }
+
+    async function startIzinCamera() {
+        const video = document.getElementById('izinCamera');
+        const startBtn = document.getElementById('startIzinCameraBtn');
+        const captureBtn = document.getElementById('captureIzinBtn');
+
+        try {
+            izinStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            });
+            video.srcObject = izinStream;
+            video.classList.remove('hidden');
+            startBtn.classList.add('hidden');
+            captureBtn.classList.remove('hidden');
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+            alert('Gagal mengakses kamera. Pastikan Anda telah memberikan izin akses kamera.');
+        }
+    }
+
+    function captureIzinPhoto() {
+        const video = document.getElementById('izinCamera');
+        const canvas = document.getElementById('izinCanvas');
+        const photo = document.getElementById('izinPhoto');
+        const preview = document.getElementById('izinPreview');
+        const captureBtn = document.getElementById('captureIzinBtn');
+        const retakeBtn = document.getElementById('retakeIzinBtn');
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        izinImageData = canvas.toDataURL('image/jpeg', 0.8);
+
+        photo.src = izinImageData;
+        preview.classList.remove('hidden');
+        video.classList.add('hidden');
+        captureBtn.classList.add('hidden');
+        retakeBtn.classList.remove('hidden');
+
+        if (izinStream) {
+            izinStream.getTracks().forEach(track => track.stop());
+            izinStream = null;
+        }
+    }
+
+    function retakeIzinPhoto() {
+        izinImageData = null;
+        document.getElementById('izinPreview').classList.add('hidden');
+        document.getElementById('retakeIzinBtn').classList.add('hidden');
+        document.getElementById('startIzinCameraBtn').classList.remove('hidden');
+    }
+
+    async function submitIzin() {
+        const alasan = document.getElementById('alasanIzin').value.trim();
+
+        if (alasan.length < 10) {
+            alert('Alasan izin minimal 10 karakter');
+            return;
+        }
+
+        if (!izinImageData) {
+            alert('Silakan ambil foto bukti izin terlebih dahulu');
+            return;
+        }
+
+        const loadingIndicator = document.getElementById('izinLoadingIndicator');
+        loadingIndicator.classList.remove('hidden');
+
+        try {
+            const response = await fetch('{{ route("student.presensi.izin") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    alasan: alasan,
+                    foto_bukti: izinImageData
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(data.message);
+                closeIzinModal();
+                location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan saat mengajukan izin');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengirim pengajuan izin');
+        } finally {
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+    // ===== SAKIT FUNCTIONS =====
+    function openSakitModal() {
+        document.getElementById('sakitModal').classList.remove('hidden');
+        document.getElementById('alasanSakit').value = '';
+        sakitImageData = null;
+        document.getElementById('sakitPreview').classList.add('hidden');
+    }
+
+    function closeSakitModal() {
+        document.getElementById('sakitModal').classList.add('hidden');
+        if (sakitStream) {
+            sakitStream.getTracks().forEach(track => track.stop());
+            sakitStream = null;
+        }
+        document.getElementById('sakitCamera').classList.add('hidden');
+        document.getElementById('startSakitCameraBtn').classList.remove('hidden');
+        document.getElementById('captureSakitBtn').classList.add('hidden');
+        document.getElementById('retakeSakitBtn').classList.add('hidden');
+    }
+
+    async function startSakitCamera() {
+        const video = document.getElementById('sakitCamera');
+        const startBtn = document.getElementById('startSakitCameraBtn');
+        const captureBtn = document.getElementById('captureSakitBtn');
+
+        try {
+            sakitStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            });
+            video.srcObject = sakitStream;
+            video.classList.remove('hidden');
+            startBtn.classList.add('hidden');
+            captureBtn.classList.remove('hidden');
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+            alert('Gagal mengakses kamera. Pastikan Anda telah memberikan izin akses kamera.');
+        }
+    }
+
+    function captureSakitPhoto() {
+        const video = document.getElementById('sakitCamera');
+        const canvas = document.getElementById('sakitCanvas');
+        const photo = document.getElementById('sakitPhoto');
+        const preview = document.getElementById('sakitPreview');
+        const captureBtn = document.getElementById('captureSakitBtn');
+        const retakeBtn = document.getElementById('retakeSakitBtn');
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        sakitImageData = canvas.toDataURL('image/jpeg', 0.8);
+
+        photo.src = sakitImageData;
+        preview.classList.remove('hidden');
+        video.classList.add('hidden');
+        captureBtn.classList.add('hidden');
+        retakeBtn.classList.remove('hidden');
+
+        if (sakitStream) {
+            sakitStream.getTracks().forEach(track => track.stop());
+            sakitStream = null;
+        }
+    }
+
+    function retakeSakitPhoto() {
+        sakitImageData = null;
+        document.getElementById('sakitPreview').classList.add('hidden');
+        document.getElementById('retakeSakitBtn').classList.add('hidden');
+        document.getElementById('startSakitCameraBtn').classList.remove('hidden');
+    }
+
+    async function submitSakit() {
+        const alasan = document.getElementById('alasanSakit').value.trim();
+
+        if (alasan.length < 10) {
+            alert('Keterangan sakit minimal 10 karakter');
+            return;
+        }
+
+        if (!sakitImageData) {
+            alert('Silakan ambil foto surat sakit terlebih dahulu');
+            return;
+        }
+
+        const loadingIndicator = document.getElementById('sakitLoadingIndicator');
+        loadingIndicator.classList.remove('hidden');
+
+        try {
+            const response = await fetch('{{ route("student.presensi.sakit") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    alasan: alasan,
+                    foto_bukti: sakitImageData
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(data.message);
+                closeSakitModal();
+                location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan saat mengirim laporan sakit');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengirim laporan sakit');
+        } finally {
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+    // ===== IMAGE MODAL FUNCTIONS =====
     function showImageModal(imageSrc) {
         const modal = document.getElementById('imageModal');
         const modalImage = document.getElementById('modalImage');
@@ -470,7 +1018,20 @@
         modal.classList.add('hidden');
     }
 
-    // Close modal when clicking outside
+    function showAlasanModal(status, alasan) {
+        const modal = document.getElementById('alasanModal');
+        const title = document.getElementById('alasanTitle');
+        const content = document.getElementById('alasanContent');
+
+        title.textContent = 'Detail Alasan ' + (status.charAt(0).toUpperCase() + status.slice(1));
+        content.textContent = alasan;
+        modal.classList.remove('hidden');
+    }
+
+    function closeAlasanModal() {
+        document.getElementById('alasanModal').classList.add('hidden');
+    }
+
     document.getElementById('imageModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeImageModal();
