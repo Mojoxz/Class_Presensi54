@@ -250,4 +250,58 @@ class PresensiController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Halaman approval pengajuan izin/sakit
+     */
+    public function approval(Request $request)
+    {
+        $query = Presensi::with(['user', 'user.kelas'])
+                        ->whereIn('status', ['izin', 'sakit']);
+
+        // Filter berdasarkan status approval
+        $filter = $request->get('filter', 'pending');
+
+        if ($filter === 'pending') {
+            $query->pendingApproval();
+        } elseif ($filter === 'approved') {
+            $query->approved();
+        } elseif ($filter === 'rejected') {
+            $query->rejected();
+        }
+
+        // Filter berdasarkan tanggal
+        if ($request->has('tanggal_mulai') && $request->tanggal_mulai) {
+            $query->where('tanggal', '>=', $request->tanggal_mulai);
+        }
+
+        if ($request->has('tanggal_akhir') && $request->tanggal_akhir) {
+            $query->where('tanggal', '<=', $request->tanggal_akhir);
+        }
+
+        // Filter berdasarkan kelas
+        if ($request->has('kelas_id') && $request->kelas_id) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('kelas_id', $request->kelas_id);
+            });
+        }
+
+        // Filter berdasarkan tipe (izin/sakit)
+        if ($request->has('tipe') && $request->tipe) {
+            $query->where('status', $request->tipe);
+        }
+
+        $pengajuan = $query->latest()->paginate(15);
+        $kelas = Kelas::all();
+
+        // Statistik
+        $statistik = [
+            'pending' => Presensi::whereIn('status', ['izin', 'sakit'])->pendingApproval()->count(),
+            'approved' => Presensi::whereIn('status', ['izin', 'sakit'])->approved()->count(),
+            'rejected' => Presensi::whereIn('status', ['izin', 'sakit'])->rejected()->count(),
+            'total' => Presensi::whereIn('status', ['izin', 'sakit'])->count(),
+        ];
+
+        return view('admin.presensi.approval', compact('pengajuan', 'kelas', 'statistik', 'filter'));
+    }
 }

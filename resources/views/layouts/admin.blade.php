@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin - SMP 54 Surabaya')</title>
     <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
     @vite(['resources/css/app.css', 'resources/css/admin.css', 'resources/js/app.js', 'resources/js/admin.js'])
@@ -52,6 +53,24 @@
                 <span class="admin-nav-text">Kelola Murid</span>
                 <span class="admin-nav-tooltip">Kelola Murid</span>
             </a>
+
+            <!-- Approval Presensi - BARU -->
+            <a href="{{ route('admin.presensi.approval') }}" class="admin-nav-item {{ request()->routeIs('admin.presensi.approval') ? 'active' : '' }}">
+                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="admin-nav-text">Approval Presensi</span>
+                <span class="admin-nav-tooltip">Approval Presensi</span>
+                @php
+                    $pendingCount = \App\Models\Presensi::whereIn('status', ['izin', 'sakit'])->pendingApproval()->count();
+                @endphp
+                @if($pendingCount > 0)
+                    <span class="absolute top-2 right-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                        {{ $pendingCount }}
+                    </span>
+                @endif
+            </a>
+
 
             <!-- Divider -->
             <div class="admin-nav-divider"></div>

@@ -58,12 +58,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('murid/{murid}/reset-password', [MuridController::class, 'resetPassword'])->name('murid.reset-password');
     Route::resource('murid', MuridController::class);
 
-
-// Presensi Management
+    // Presensi Management
     Route::get('presensi', [AdminPresensiController::class, 'index'])->name('presensi.index');
     Route::get('presensi/rekap', [AdminPresensiController::class, 'rekap'])->name('presensi.rekap');
     Route::get('presensi/detail/{userId}', [AdminPresensiController::class, 'detail'])->name('presensi.detail');
     Route::get('presensi/export', [AdminPresensiController::class, 'export'])->name('presensi.export');
+
+    // TAMBAHKAN ROUTE BARU INI untuk Approval
+    Route::get('presensi/approval', [AdminPresensiController::class, 'approval'])->name('presensi.approval');
+    Route::post('presensi/{id}/approve', [AdminPresensiController::class, 'approve'])->name('presensi.approve');
+    Route::post('presensi/{id}/reject', [AdminPresensiController::class, 'reject'])->name('presensi.reject');
 
     // Berita Management
     Route::resource('berita', AdminBeritaController::class)->parameters([

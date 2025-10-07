@@ -536,6 +536,50 @@
 }
 
 
+.admin-nav-item {
+    position: relative;
+}
+
+.admin-nav-item .notification-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    background-color: #ef4444;
+    border-radius: 9999px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* When sidebar is collapsed */
+.admin-sidebar.collapsed .notification-badge {
+    right: 0.25rem;
+    top: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-nav-item .notification-badge {
+        top: 0.75rem;
+        right: 1rem;
+    }
+}
+
 /* Sidebar Overlay for Mobile */
 .sidebar-overlay {
     @apply fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300;
