@@ -72,8 +72,8 @@
             </a>
 
 
-            <!-- Divider -->
-            <div class="admin-nav-divider"></div>
+            <!-- Divider
+            <div class="admin-nav-divider"></div> -->
 
             <!-- Rekap Presensi -->
             <a href="{{ route('admin.presensi.index') }}" class="admin-nav-item {{ request()->routeIs('admin.presensi.*') ? 'active' : '' }}">

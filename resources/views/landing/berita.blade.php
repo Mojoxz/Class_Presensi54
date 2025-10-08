@@ -7,7 +7,7 @@
 <section class="relative min-h-screen overflow-hidden">
     <!-- Background Image Layer -->
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('images/gedung.jpg') }}"
+        <img src="{{ asset('images/gambar6.jpg') }}"
              alt="Gedung SMP 54 Surabaya"
              class="w-full h-full object-cover"
              onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #9333ea 0%, #f59e0b 100%)';">

@@ -7,7 +7,7 @@
 <section class="relative min-h-screen overflow-hidden">
     <!-- Background Image Layer -->
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('images/gedung.jpg') }}"
+        <img src="{{ asset('images/gambar6.jpg') }}"
              alt="Gedung SMP 54 Surabaya"
              class="w-full h-full object-cover"
              onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #9333ea 0%, #f59e0b 100%)';">
@@ -146,7 +146,7 @@
             <div class="animate-on-scroll" style="animation-delay: 0.2s;">
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-purple-50 to-amber-50">
                     <div class="relative h-[400px] md:h-[500px] lg:h-[600px]">
-                        <img src="{{ asset('images/gedung.jpg') }}"
+                        <img src="{{ asset('images/gambar5.jpg') }}"
                             alt="Gedung Sekolah SMP 54 Surabaya"
                             class="w-full h-full object-cover" />
                     </div>

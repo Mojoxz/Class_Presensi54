@@ -8,10 +8,10 @@
     <!-- Background Image Slider -->
     <div class="absolute inset-0 overflow-hidden">
         <div class="hero-slider">
-            <div class="hero-slide active" style="background-image: url('{{ asset('images/sekolah.jpeg') }}');"></div>
-            <div class="hero-slide" style="background-image: url('{{ asset('images/gedung.jpg') }}');"></div>
-            <div class="hero-slide" style="background-image: url('{{ asset('images/hero-3.jpg') }}');"></div>
-            <div class="hero-slide" style="background-image: url('{{ asset('images/hero-4.jpg') }}');"></div>
+            <div class="hero-slide active" style="background-image: url('{{ asset('images/gambar1.jpg') }}');"></div>
+            <div class="hero-slide" style="background-image: url('{{ asset('images/gambar2.jpg') }}');"></div>
+            <div class="hero-slide" style="background-image: url('{{ asset('images/gambar3.jpg') }}');"></div>
+            <div class="hero-slide" style="background-image: url('{{ asset('images/gambar4.jpg') }}');"></div>
         </div>
         <!-- Overlay untuk readability -->
         <div class="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-purple-900/60 to-amber-900/70"></div>
