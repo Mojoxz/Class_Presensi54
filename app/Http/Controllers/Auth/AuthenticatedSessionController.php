@@ -14,6 +14,15 @@ use App\Models\Kelas;
 class AuthenticatedSessionController extends Controller
 {
     /**
+     * Display the login view (default method required by Laravel).
+     */
+    public function create(): View
+    {
+        // Default redirect ke student login
+        return $this->createStudent();
+    }
+
+    /**
      * Display the admin login view.
      */
     public function createAdmin(): View

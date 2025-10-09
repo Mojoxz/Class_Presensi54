@@ -15,6 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
     })
+
+    ->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias([
+        'session.timeout' => \App\Http\Middleware\SessionTimeoutMiddleware::class,
+        ]);
+    })
+
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

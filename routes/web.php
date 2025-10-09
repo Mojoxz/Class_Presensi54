@@ -20,6 +20,19 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+Route::get('/check-session', function () {
+    return response()->json([
+        'authenticated' => Auth::check(),
+        'user' => Auth::user() ? [
+            'id' => Auth::user()->id,
+            'role' => Auth::user()->role
+        ] : null
+    ]);
+})->name('check.session');
+
+
+
+
 // ===========================
 // LANDING PAGE ROUTES
 // ===========================
@@ -44,7 +57,7 @@ require __DIR__.'/auth.php';
 // ===========================
 // ADMIN ROUTES
 // ===========================
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin', 'session.timeout'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -69,6 +82,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('presensi/{id}/approve', [AdminPresensiController::class, 'approve'])->name('presensi.approve');
     Route::post('presensi/{id}/reject', [AdminPresensiController::class, 'reject'])->name('presensi.reject');
 
+
+
     // Berita Management
     Route::resource('berita', AdminBeritaController::class)->parameters([
         'berita' => 'berita'
@@ -87,7 +102,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 // ===========================
 // STUDENT ROUTES
 // ===========================
-Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', 'role:student', 'session.timeout'])->prefix('student')->name('student.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
     Route::get('/home', [StudentDashboardController::class, 'home'])->name('home');

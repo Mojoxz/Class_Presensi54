@@ -187,6 +187,85 @@
 
     <!-- Admin JavaScript -->
     <script>
+
+                // Setup untuk fetch API
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            return originalFetch.apply(this, args).then(response => {
+                if (response.status === 401) {
+                    showSessionExpiredModal('admin');
+                }
+                return response;
+            });
+        };
+
+        // Check session setiap 5 menit
+        setInterval(checkSession, 5 * 60 * 1000);
+
+        function checkSession() {
+            fetch('/check-session')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated) {
+                        showSessionExpiredModal('admin');
+                    }
+                })
+                .catch(() => showSessionExpiredModal('admin'));
+        }
+
+        function showSessionExpiredModal(role) {
+            if (!document.getElementById('sessionExpiredModal')) {
+                const modalHTML = `
+                    <div id="sessionExpiredModal" class="fixed inset-0 z-[9999] flex items-center justify-center">
+                        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+                        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-white">Sesi Berakhir</h3>
+                                        <p class="text-white/90 text-sm">Session Expired</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 text-center">
+                                <div class="mb-4">
+                                    <div class="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                                        <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-gray-700 text-lg mb-2">Sesi Anda telah berakhir</p>
+                                    <p class="text-gray-500 text-sm">Silakan login kembali untuk melanjutkan</p>
+                                </div>
+                                <button onclick="redirectToLogin('${role}')" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    <span>Login Kembali</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+        }
+
+        function redirectToLogin(role) {
+            if (role === 'admin') {
+                window.location.href = '{{ route("admin.login") }}';
+            } else if (role === 'student') {
+                window.location.href = '{{ route("student.login") }}';
+            } else {
+                window.location.href = '/';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('adminSidebar');
             const mainWrapper = document.getElementById('mainWrapper');
