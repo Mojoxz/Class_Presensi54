@@ -17,7 +17,7 @@
         <!-- Header -->
         <div class="admin-sidebar-header">
             <div class="admin-logo-wrapper">
-                    <img src="{{ asset('logo.png') }}" alt="Logo" class="w-10 h-10">
+                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-10 h-10">
                 <div class="admin-logo-text">
                     <div class="admin-logo-title">Admin Panel</div>
                     <div class="admin-logo-subtitle">SMP 54 Surabaya</div>
@@ -29,8 +29,8 @@
         <nav class="admin-nav">
             <!-- Dashboard -->
             <a href="{{ route('admin.dashboard') }}" class="admin-nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                <svg class="admin-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                 </svg>
                 <span class="admin-nav-text">Dashboard</span>
                 <span class="admin-nav-tooltip">Dashboard</span>
@@ -38,8 +38,8 @@
 
             <!-- Kelola Kelas -->
             <a href="{{ route('admin.kelas.index') }}" class="admin-nav-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">
-                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                <svg class="admin-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
                 </svg>
                 <span class="admin-nav-text">Kelola Kelas</span>
                 <span class="admin-nav-tooltip">Kelola Kelas</span>
@@ -47,17 +47,17 @@
 
             <!-- Kelola Murid -->
             <a href="{{ route('admin.murid.index') }}" class="admin-nav-item {{ request()->routeIs('admin.murid.*') ? 'active' : '' }}">
-                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                <svg class="admin-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                 </svg>
                 <span class="admin-nav-text">Kelola Murid</span>
                 <span class="admin-nav-tooltip">Kelola Murid</span>
             </a>
 
-            <!-- Approval Presensi - BARU -->
+            <!-- Approval Presensi - DIPERBAIKI: route exact match -->
             <a href="{{ route('admin.presensi.approval') }}" class="admin-nav-item {{ request()->routeIs('admin.presensi.approval') ? 'active' : '' }}">
-                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <svg class="admin-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                 </svg>
                 <span class="admin-nav-text">Approval Presensi</span>
                 <span class="admin-nav-tooltip">Approval Presensi</span>
@@ -65,20 +65,16 @@
                     $pendingCount = \App\Models\Presensi::whereIn('status', ['izin', 'sakit'])->pendingApproval()->count();
                 @endphp
                 @if($pendingCount > 0)
-                    <span class="absolute top-2 right-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                    <span class="notification-badge">
                         {{ $pendingCount }}
                     </span>
                 @endif
             </a>
 
-
-            <!-- Divider
-            <div class="admin-nav-divider"></div> -->
-
-            <!-- Rekap Presensi -->
-            <a href="{{ route('admin.presensi.index') }}" class="admin-nav-item {{ request()->routeIs('admin.presensi.*') ? 'active' : '' }}">
-                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            <!-- Rekap Presensi - DIPERBAIKI: exclude approval route -->
+            <a href="{{ route('admin.presensi.index') }}" class="admin-nav-item {{ request()->routeIs('admin.presensi.index') || (request()->routeIs('admin.presensi.*') && !request()->routeIs('admin.presensi.approval')) ? 'active' : '' }}">
+                <svg class="admin-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
                 </svg>
                 <span class="admin-nav-text">Rekap Presensi</span>
                 <span class="admin-nav-tooltip">Rekap Presensi</span>
@@ -86,11 +82,28 @@
 
             <!-- Kelola Berita -->
             <a href="{{ route('admin.berita.index') }}" class="admin-nav-item {{ request()->routeIs('admin.berita.*') ? 'active' : '' }}">
-                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                <svg class="admin-nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 14H6v-2h2v2zm0-3H6V9h2v2zm0-3H6V6h2v2zm7 6h-5v-2h5v2zm3-3h-8V9h8v2zm0-3h-8V6h8v2z"/>
                 </svg>
                 <span class="admin-nav-text">Kelola Berita</span>
                 <span class="admin-nav-tooltip">Kelola Berita</span>
+            </a>
+
+
+            <a href="{{ route('admin.kontak.index') }}" class="admin-nav-item {{ request()->routeIs('admin.kontak.*') ? 'active' : '' }}">
+                <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <span class="admin-nav-text">Pesan Kontak</span>
+                <span class="admin-nav-tooltip">Pesan Kontak</span>
+                @php
+                    $unreadKontak = \App\Models\Kontak::where('is_read', false)->count();
+                @endphp
+                @if($unreadKontak > 0)
+                    <span class="absolute top-2 right-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                        {{ $unreadKontak }}
+                    </span>
+                @endif
             </a>
         </nav>
     </aside>

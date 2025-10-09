@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\MuridController;
 use App\Http\Controllers\Admin\PresensiController as AdminPresensiController;
 use App\Http\Controllers\Admin\BeritaController as AdminBeritaController;
+use App\Http\Controllers\Admin\KontakController as AdminKontakController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\PresensiController as StudentPresensiController;
 use App\Http\Controllers\Student\ProfileController as StudentProfileController;
@@ -27,6 +28,7 @@ Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');
 Route::get('/berita', [LandingController::class, 'berita'])->name('berita.public');
 Route::get('/berita/{id}', [LandingController::class, 'detailBerita'])->name('berita.detail');
 Route::get('/kontak', [LandingController::class, 'kontak'])->name('kontak');
+Route::post('/kontak', [LandingController::class, 'submitKontak'])->name('kontak.submit');
 
 // ===========================
 // CUSTOM LOGIN ROUTES
@@ -63,8 +65,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('presensi/rekap', [AdminPresensiController::class, 'rekap'])->name('presensi.rekap');
     Route::get('presensi/detail/{userId}', [AdminPresensiController::class, 'detail'])->name('presensi.detail');
     Route::get('presensi/export', [AdminPresensiController::class, 'export'])->name('presensi.export');
-
-    // TAMBAHKAN ROUTE BARU INI untuk Approval
     Route::get('presensi/approval', [AdminPresensiController::class, 'approval'])->name('presensi.approval');
     Route::post('presensi/{id}/approve', [AdminPresensiController::class, 'approve'])->name('presensi.approve');
     Route::post('presensi/{id}/reject', [AdminPresensiController::class, 'reject'])->name('presensi.reject');
@@ -73,6 +73,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('berita', AdminBeritaController::class)->parameters([
         'berita' => 'berita'
     ]);
+
+    // Kontak Management - BARU
+    Route::get('kontak', [AdminKontakController::class, 'index'])->name('kontak.index');
+    Route::get('kontak/{id}', [AdminKontakController::class, 'show'])->name('kontak.show');
+    Route::post('kontak/{id}/toggle-display', [AdminKontakController::class, 'toggleDisplay'])->name('kontak.toggle-display');
+    Route::post('kontak/{id}/mark-read', [AdminKontakController::class, 'markAsRead'])->name('kontak.mark-read');
+    Route::post('kontak/{id}/mark-unread', [AdminKontakController::class, 'markAsUnread'])->name('kontak.mark-unread');
+    Route::delete('kontak/{id}', [AdminKontakController::class, 'destroy'])->name('kontak.destroy');
+    Route::delete('kontak-bulk-delete', [AdminKontakController::class, 'bulkDelete'])->name('kontak.bulk-delete');
 });
 
 // ===========================

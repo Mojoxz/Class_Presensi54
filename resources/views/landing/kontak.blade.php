@@ -44,6 +44,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
 <!-- Hero Section -->
 <section class="relative min-h-screen overflow-hidden">
     <!-- Background Image Layer -->
@@ -105,7 +106,7 @@
                     <div class="text-xs md:text-sm text-white/90 mt-1">Layanan Online</div>
                 </div>
                 <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                    <div class="text-xl md:text-3xl font-bold text-amber-300">>1h</div>
+                    <div class="text-xl md:text-3xl font-bold text-amber-300"><1h</div>
                     <div class="text-xs md:text-sm text-white/90 mt-1">Respon Time</div>
                 </div>
                 <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
@@ -116,12 +117,13 @@
         </div>
     </div>
 
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
         </svg>
     </div>
 </section>
+
 <!-- Contact Section -->
 <section class="py-20 md:py-32 bg-white relative">
     <div class="container-custom">
@@ -219,21 +221,57 @@
                         <p class="text-gray-600">Sampaikan pesan atau pertanyaan Anda kepada kami</p>
                     </div>
 
-                    <form class="space-y-6" action="#" method="POST">
+                    @if(session('success'))
+                        <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg animate-fade-in-up">
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-green-700 font-medium">{{ session('success') }}</p>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg animate-fade-in-up">
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-red-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-red-700 font-medium mb-2">Terdapat kesalahan:</p>
+                                    <ul class="list-disc list-inside text-red-600 text-sm">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <form class="space-y-6" action="{{ route('kontak.submit') }}" method="POST">
+                        @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    Nama Lengkap
+                                    Nama Lengkap <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="name" name="name" required
-                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300">
+                                <input type="text" id="name" name="name" required value="{{ old('name') }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300 @error('name') border-red-500 @enderror">
+                                @error('name')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    Email
+                                    Email <span class="text-red-500">*</span>
                                 </label>
-                                <input type="email" id="email" name="email" required
-                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300">
+                                <input type="email" id="email" name="email" required value="{{ old('email') }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300 @error('email') border-red-500 @enderror">
+                                @error('email')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
@@ -242,24 +280,30 @@
                                 <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">
                                     Nomor Telepon
                                 </label>
-                                <input type="tel" id="phone" name="phone"
+                                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300">
                             </div>
                             <div>
                                 <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    Subjek
+                                    Subjek <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="subject" name="subject" required
-                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300">
+                                <input type="text" id="subject" name="subject" required value="{{ old('subject') }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300 @error('subject') border-red-500 @enderror">
+                                @error('subject')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
                         <div>
                             <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Pesan
+                                Pesan <span class="text-red-500">*</span>
                             </label>
                             <textarea id="message" name="message" rows="6" required
-                                      class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300 resize-none"></textarea>
+                                      class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 hover:border-purple-300 resize-none @error('message') border-red-500 @enderror">{{ old('message') }}</textarea>
+                            @error('message')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <button type="submit"
@@ -277,8 +321,68 @@
     </div>
 </section>
 
-<!-- Map Section -->
+<!-- Pesan dari Pengunjung Section -->
+@if($pesan_ditampilkan->count() > 0)
 <section class="py-20 md:py-32 bg-gradient-to-b from-white to-gray-50">
+    <div class="container-custom">
+        <div class="text-center mb-16 animate-on-scroll">
+            <span class="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">Testimoni</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Pesan dari <span class="gradient-text">Pengunjung</span>
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Apa yang mereka katakan tentang kami
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            @foreach($pesan_ditampilkan as $pesan)
+            <div class="news-card group animate-on-scroll hover:shadow-2xl transition-all duration-300" style="animation-delay: {{ $loop->index * 0.1 }}s;">
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                        {{ strtoupper(substr($pesan->nama, 0, 1)) }}
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-gray-900 text-lg">{{ $pesan->nama }}</h3>
+                        <p class="text-sm text-gray-500">{{ $pesan->created_at->diffForHumans() }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
+                        {{ $pesan->subjek }}
+                    </span>
+                </div>
+
+                <p class="text-gray-600 leading-relaxed line-clamp-4">
+                    {{ $pesan->pesan }}
+                </p>
+
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <a href="mailto:{{ $pesan->email }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Balas
+                    </a>
+                    @if($pesan->telepon)
+                    <a href="tel:{{ $pesan->telepon }}" class="text-sm text-green-600 hover:text-green-700 font-medium flex items-center gap-1 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        Hubungi
+                    </a>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+<!-- Map Section -->
+<section class="py-20 md:py-32 bg-gradient-to-b from-gray-50 to-white">
     <div class="container-custom">
         <div class="text-center mb-16 animate-on-scroll">
             <span class="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">Lokasi Kami</span>

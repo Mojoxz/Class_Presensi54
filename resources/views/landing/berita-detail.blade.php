@@ -6,6 +6,17 @@
 <!-- Hero Section -->
 <section class="hero-section relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50 to-amber-50">
     <!-- Animated Background Elements -->
+
+        <div class="absolute inset-0 z-0">
+        <img src="{{ asset('images/gambar6.jpg') }}"
+             alt="Gedung SMP 54 Surabaya"
+             class="w-full h-full object-cover"
+             <!-- onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #9333ea 0%, #f59e0b 100%)';">
+        <!-- Dark overlay for better text readability -->
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/80 via-purple-800/75 to-amber-900/70"></div> -->
+    </div>
+
+
     <div class="absolute inset-0 overflow-hidden">
         <div class="floating-shape shape-1"></div>
         <div class="floating-shape shape-2"></div>
@@ -16,26 +27,26 @@
         <div class="max-w-4xl mx-auto text-center space-y-8">
             <!-- Breadcrumb -->
             <div class="animate-fade-in-down" style="animation-delay: 0.1s;">
-                <nav class="flex items-center justify-center space-x-2 text-gray-600 mb-6">
-                    <a href="{{ route('landing') }}" class="hover:text-purple-600 transition-colors">
+                <nav class="flex items-center justify-center space-x-2 text-white/90 mb-6">
+                    <a href="{{ route('landing') }}" class="hover:text-amber-200 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                         </svg>
                     </a>
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                    <a href="{{ route('berita.public') }}" class="hover:text-purple-600 transition-colors">Berita</a>
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('berita.public') }}" class="hover:text-amber-200 transition-colors">Berita</a>
+                    <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                    <span class="text-purple-600">Detail</span>
+                    <span class="text-amber-200 font-semibold">Detail</span>
                 </nav>
             </div>
 
             <!-- Badge -->
             <div class="animate-fade-in-down" style="animation-delay: 0.2s;">
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-purple-200 shadow-sm">
+                <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-md rounded-full border border-white/30 shadow-lg">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
@@ -46,40 +57,40 @@
 
             <!-- Title -->
             <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight leading-tight">
-                    {{ $berita->judul }}
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
+                    <span class="block text-white drop-shadow-lg">{{ $berita->judul }}</span>
                 </h1>
-                <div class="flex items-center justify-center gap-2">
-                    <div class="h-1 w-12 bg-gradient-to-r from-purple-600 to-transparent rounded-full"></div>
-                    <div class="h-1 w-12 bg-gradient-to-r from-purple-600 via-amber-500 to-transparent rounded-full"></div>
+                <div class="flex items-center justify-center gap-2 mt-4">
+                    <div class="h-1 w-12 bg-gradient-to-r from-white/80 to-transparent rounded-full"></div>
+                    <div class="h-1 w-12 bg-gradient-to-r from-amber-400 via-purple-400 to-transparent rounded-full"></div>
                 </div>
             </div>
 
             <!-- Meta Info -->
-            <div class="animate-fade-in-up flex flex-wrap items-center justify-center gap-6 text-gray-600" style="animation-delay: 0.4s;">
-                <div class="flex items-center gap-2">
-                    <div class="feature-icon-wrapper bg-gradient-to-br from-purple-500 to-purple-600 !w-8 !h-8">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="animate-fade-in-up flex flex-wrap items-center justify-center gap-6 text-white/95 pt-4" style="animation-delay: 0.4s;">
+                <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl px-5 py-3 border border-white/20">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 shadow-lg">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
-                    <span class="font-medium">{{ $berita->created_at->format('d F Y') }}</span>
+                    <span class="font-semibold drop-shadow-md text-base">{{ $berita->created_at->format('d F Y') }}</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <div class="feature-icon-wrapper bg-gradient-to-br from-amber-500 to-yellow-500 !w-8 !h-8">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl px-5 py-3 border border-white/20">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 shadow-lg">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                     </div>
-                    <span class="font-medium">{{ $berita->user->name }}</span>
+                    <span class="font-semibold drop-shadow-md text-base">{{ $berita->user->name }}</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
+        <svg class="w-6 h-6 text-white/80 drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
         </svg>
     </div>
@@ -95,7 +106,7 @@
                     <div class="relative mb-12 group">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
                         <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}"
-                             class="w-full h-64 md:h-96 object-cover rounded-2xl shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-700">
+                             class="w-full h-96 md:h-[500px] object-cover rounded-2xl shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-700">
                     </div>
                 @endif
 
