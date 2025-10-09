@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/landing.js',
                 'resources/js/admin.js',
                 'resources/js/student.js',
+
             ],
             refresh: true,
         }),

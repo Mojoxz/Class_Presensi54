@@ -697,3 +697,493 @@
 .pagination-info {
     @apply text-center text-sm text-gray-600 mt-3;
 }
+
+/* ========================================
+   KONTAK MODULE - ENHANCED STYLES
+   ======================================== */
+
+/* Admin Card Enhancement */
+.admin-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Stats Cards - Gradient Style */
+.admin-card.bg-gradient-to-br {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.admin-card.bg-gradient-to-br:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-4px);
+}
+
+/* Input Enhancement */
+.admin-input {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: white;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.admin-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5);
+    border-color: transparent;
+}
+
+/* Checkbox Styling */
+.admin-checkbox {
+    width: 1rem;
+    height: 1rem;
+    color: rgb(147, 51, 234);
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.admin-checkbox:focus {
+    box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5);
+}
+
+/* Button Variants */
+.admin-btn-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, rgb(59, 130, 246), rgb(37, 99, 235));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.admin-btn-info:hover {
+    background: linear-gradient(to right, rgb(37, 99, 235), rgb(29, 78, 216));
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.admin-btn-success {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, rgb(34, 197, 94), rgb(22, 163, 74));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.admin-btn-success:hover {
+    background: linear-gradient(to right, rgb(22, 163, 74), rgb(21, 128, 61));
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.admin-btn-warning {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, rgb(245, 158, 11), rgb(217, 119, 6));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.admin-btn-warning:hover {
+    background: linear-gradient(to right, rgb(217, 119, 6), rgb(180, 83, 9));
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Small Button Variant */
+.admin-btn-sm.admin-btn-info,
+.admin-btn-sm.admin-btn-success,
+.admin-btn-sm.admin-btn-warning {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Table Enhancements for Kontak */
+.admin-table tbody tr.bg-blue-50 {
+    background-color: rgba(239, 246, 255, 0.8);
+    border-left: 3px solid rgb(59, 130, 246);
+}
+
+.admin-table tbody tr.bg-blue-50:hover {
+    background-color: rgba(219, 234, 254, 0.9);
+}
+
+/* Badge Enhancements */
+.admin-table tbody td span.inline-flex {
+    transition: all 0.2s ease;
+}
+
+.admin-table tbody td span.inline-flex:hover {
+    transform: scale(1.05);
+}
+
+/* Status Badge Colors */
+.bg-blue-100 {
+    background-color: rgb(219, 234, 254);
+}
+
+.text-blue-800 {
+    color: rgb(30, 64, 175);
+}
+
+.bg-green-100 {
+    background-color: rgb(220, 252, 231);
+}
+
+.text-green-800 {
+    color: rgb(22, 101, 52);
+}
+
+.bg-gray-100 {
+    background-color: rgb(243, 244, 246);
+}
+
+.text-gray-600 {
+    color: rgb(75, 85, 99);
+}
+
+.text-gray-800 {
+    color: rgb(31, 41, 55);
+}
+
+/* Action Buttons Row */
+.admin-table tbody td:last-child .flex {
+    gap: 0.5rem;
+}
+
+/* Detail Page - Avatar Circle */
+.w-16.h-16.bg-gradient-to-br {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Contact Info Card Icons */
+.flex-shrink-0.w-10.h-10 {
+    transition: all 0.3s ease;
+}
+
+.flex-shrink-0.w-10.h-10:hover {
+    transform: scale(1.1);
+}
+
+/* Email & Phone Links */
+a[href^="mailto:"],
+a[href^="tel:"] {
+    transition: all 0.2s ease;
+}
+
+a[href^="mailto:"]:hover,
+a[href^="tel:"]:hover {
+    text-decoration: underline;
+}
+
+/* Quick Actions Card Buttons */
+.admin-card .space-y-3 > form,
+.admin-card .space-y-3 > a {
+    width: 100%;
+}
+
+/* Info Card with Gradient Background */
+.admin-card.bg-gradient-to-br.from-purple-50 {
+    border-width: 1px;
+    animation: subtleGlow 3s ease-in-out infinite;
+}
+
+@keyframes subtleGlow {
+    0%, 100% {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+    }
+}
+
+/* Empty State Enhancement */
+.admin-card .text-center svg {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Filter Section Enhancement */
+.admin-card form .flex {
+    align-items: stretch;
+}
+
+.admin-card form .flex-1,
+.admin-card form .w-full {
+    min-height: 42px;
+}
+
+/* Bulk Delete Button */
+#bulkDeleteBtn {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Prose Content for Message Body */
+.prose {
+    max-width: 65ch;
+}
+
+.prose p {
+    line-height: 1.75;
+    margin-bottom: 1em;
+}
+
+/* Border Enhancement for Message Subject */
+.bg-purple-50.border-l-4 {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Table Actions */
+@media (max-width: 768px) {
+    /* Stack action buttons vertically on mobile */
+    .admin-table tbody td:last-child .flex {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .admin-table tbody td:last-child .flex > * {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Improve badge visibility on mobile */
+    .admin-table tbody td span.inline-flex {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .admin-table tbody td span.inline-flex svg {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    /* Better spacing for status badges */
+    .admin-table tbody td .flex-col {
+        gap: 0.375rem;
+    }
+
+    /* Adjust card padding on mobile */
+    .admin-card.bg-gradient-to-br {
+        padding: 1rem;
+    }
+
+    .admin-card.bg-gradient-to-br h3 {
+        font-size: 1.5rem;
+    }
+
+    .admin-card.bg-gradient-to-br p {
+        font-size: 0.75rem;
+    }
+
+    .admin-card.bg-gradient-to-br svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    /* Filter form mobile improvements */
+    .admin-card form .flex {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    /* Contact info card mobile */
+    .space-y-6 > .admin-card {
+        padding: 1rem;
+    }
+
+    /* Quick actions spacing */
+    .admin-card .space-y-3 {
+        gap: 0.5rem;
+    }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Adjust grid for stats cards */
+    .grid.grid-cols-1.md\:grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Better spacing for filter section */
+    .admin-card form .flex {
+        gap: 1rem;
+    }
+}
+
+/* Print Styles for Detail Page */
+@media print {
+    .admin-sidebar,
+    .sidebar-toggle,
+    .admin-header,
+    .admin-card .space-y-3,
+    a[href^="mailto:"],
+    a[href^="tel:"],
+    form {
+        display: none !important;
+    }
+
+    .admin-main-wrapper {
+        margin-left: 0 !important;
+    }
+
+    .admin-card {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb !important;
+    }
+
+    .lg\:col-span-2 {
+        grid-column: span 3 !important;
+    }
+}
+
+/* Smooth Transitions for All Interactive Elements */
+.admin-table tbody tr,
+.admin-card,
+.admin-btn-primary,
+.admin-btn-secondary,
+.admin-btn-danger,
+.admin-btn-info,
+.admin-btn-success,
+.admin-btn-warning {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Focus States for Accessibility */
+.admin-checkbox:focus,
+.admin-input:focus,
+button:focus,
+a:focus {
+    outline: 2px solid rgb(147, 51, 234);
+    outline-offset: 2px;
+}
+
+/* Loading State for Forms */
+form[onsubmit] button[type="submit"] {
+    position: relative;
+}
+
+form[onsubmit] button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Truncate Text Helper */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.max-w-xs {
+    max-width: 20rem;
+}
+
+/* Grid Layout Enhancement */
+.grid.gap-6 {
+    gap: 1.5rem;
+}
+
+.space-y-6 > * + * {
+    margin-top: 1.5rem;
+}
+
+/* Icon Hover Effects */
+.admin-table svg,
+.admin-card svg {
+    transition: transform 0.2s ease;
+}
+
+.admin-table button:hover svg,
+.admin-card button:hover svg,
+.admin-table a:hover svg,
+.admin-card a:hover svg {
+    transform: scale(1.1);
+}
+
+/* Divider Enhancement */
+.border-t.border-gray-200 {
+    margin: 1rem 0;
+    opacity: 0.5;
+}
+
+/* Text Gradient for Headers */
+.text-2xl.font-bold {
+    background: linear-gradient(135deg, rgb(31, 41, 55) 0%, rgb(55, 65, 81) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* Shadow Enhancements */
+.shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Hover Effect for Cards */
+.admin-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Back Button Enhancement */
+a.admin-btn-secondary svg {
+    transition: transform 0.2s ease;
+}
+
+a.admin-btn-secondary:hover svg {
+    transform: translateX(-4px);
+}
