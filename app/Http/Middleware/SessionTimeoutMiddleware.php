@@ -14,10 +14,15 @@ class SessionTimeoutMiddleware
         // Jika request adalah AJAX dan session sudah habis
         if ($request->ajax() || $request->wantsJson()) {
             if (!Auth::check()) {
+                $user = $request->user();
+                $redirectRoute = $user && $user->role === 'admin'
+                    ? route('admin.login')
+                    : route('student.login');
+
                 return response()->json([
                     'error' => 'Session expired',
                     'message' => 'Sesi Anda telah berakhir. Silakan login kembali.',
-                    'redirect' => route('login')
+                    'redirect' => $redirectRoute
                 ], 401);
             }
         }

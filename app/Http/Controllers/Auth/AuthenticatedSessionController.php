@@ -25,16 +25,36 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the admin login view.
      */
-    public function createAdmin(): View
+    public function createAdmin()
     {
+        // Jika sudah login sebagai admin, redirect ke dashboard
+        if (Auth::check() && Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Jika login sebagai role lain, logout dulu
+        if (Auth::check()) {
+            Auth::logout();
+        }
+
         return view('auth.admin-login');
     }
 
     /**
      * Display the student login view.
      */
-    public function createStudent(): View
+    public function createStudent()
     {
+        // Jika sudah login sebagai student, redirect ke dashboard
+        if (Auth::check() && Auth::user()->role === 'student') {
+            return redirect()->route('student.dashboard');
+        }
+
+        // Jika login sebagai role lain, logout dulu
+        if (Auth::check()) {
+            Auth::logout();
+        }
+
         $kelas = Kelas::all();
         return view('auth.student-login', compact('kelas'));
     }
@@ -50,6 +70,9 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
+        // Clear any previous session timeout flags
+        $request->session()->forget('session_expired');
+
         if ($user->role === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
         } else {
@@ -62,12 +85,19 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+        $role = $user ? $user->role : null;
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // Redirect based on role
+        if ($role === 'admin') {
+            return redirect()->route('admin.login');
+        } else {
+            return redirect()->route('student.login');
+        }
     }
 }

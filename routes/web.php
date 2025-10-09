@@ -13,6 +13,7 @@ use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Session Check Route - TANPA middleware session.timeout
 Route::get('/check-session', function () {
     return response()->json([
         'authenticated' => Auth::check(),
@@ -29,9 +31,6 @@ Route::get('/check-session', function () {
         ] : null
     ]);
 })->name('check.session');
-
-
-
 
 // ===========================
 // LANDING PAGE ROUTES
@@ -44,10 +43,13 @@ Route::get('/kontak', [LandingController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [LandingController::class, 'submitKontak'])->name('kontak.submit');
 
 // ===========================
-// CUSTOM LOGIN ROUTES
+// CUSTOM LOGIN ROUTES - TANPA middleware
 // ===========================
-Route::get('/admin/login', [AuthenticatedSessionController::class, 'createAdmin'])->name('admin.login');
-Route::get('/student/login', [AuthenticatedSessionController::class, 'createStudent'])->name('student.login');
+Route::get('/admin/login', [AuthenticatedSessionController::class, 'createAdmin'])
+    ->name('admin.login');
+
+Route::get('/student/login', [AuthenticatedSessionController::class, 'createStudent'])
+    ->name('student.login');
 
 // ===========================
 // AUTH ROUTES
@@ -82,14 +84,12 @@ Route::middleware(['auth', 'role:admin', 'session.timeout'])->prefix('admin')->n
     Route::post('presensi/{id}/approve', [AdminPresensiController::class, 'approve'])->name('presensi.approve');
     Route::post('presensi/{id}/reject', [AdminPresensiController::class, 'reject'])->name('presensi.reject');
 
-
-
     // Berita Management
     Route::resource('berita', AdminBeritaController::class)->parameters([
         'berita' => 'berita'
     ]);
 
-    // Kontak Management - BARU
+    // Kontak Management
     Route::get('kontak', [AdminKontakController::class, 'index'])->name('kontak.index');
     Route::get('kontak/{id}', [AdminKontakController::class, 'show'])->name('kontak.show');
     Route::post('kontak/{id}/toggle-display', [AdminKontakController::class, 'toggleDisplay'])->name('kontak.toggle-display');
