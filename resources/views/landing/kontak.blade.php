@@ -40,6 +40,159 @@
     .leaflet-control-zoom a:hover {
         background: #f3f4f6 !important;
     }
+
+    /* Comment/Message Card Styles - Blogspot Inspired */
+    .comment-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+        padding: 24px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .comment-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #9333ea, #f59e0b);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }
+
+    .comment-card:hover {
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        border-color: rgba(147, 51, 234, 0.3);
+        transform: translateY(-4px);
+    }
+
+    .comment-card:hover::before {
+        transform: scaleY(1);
+    }
+
+    .comment-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #9333ea 0%, #f59e0b 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 22px;
+        box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+        flex-shrink: 0;
+    }
+
+    .comment-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .comment-meta {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .comment-author {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+    }
+
+    .comment-date {
+        font-size: 13px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .comment-subject {
+        display: inline-block;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #faf5ff 0%, #fef3c7 100%);
+        border: 1px solid #e9d5ff;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #7c3aed;
+        margin-bottom: 12px;
+    }
+
+    .comment-body {
+        color: #4b5563;
+        line-height: 1.7;
+        font-size: 15px;
+        margin-bottom: 16px;
+    }
+
+    .comment-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+    .comment-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .comment-action-btn.reply {
+        background: #f0f9ff;
+        color: #0284c7;
+        border: 1px solid #e0f2fe;
+    }
+
+    .comment-action-btn.reply:hover {
+        background: #e0f2fe;
+        border-color: #0284c7;
+    }
+
+    .comment-action-btn.call {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #dcfce7;
+    }
+
+    .comment-action-btn.call:hover {
+        background: #dcfce7;
+        border-color: #16a34a;
+    }
+
+    /* Empty State */
+    .empty-comments {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #faf5ff 0%, #fef3c7 100%);
+        border-radius: 16px;
+        border: 2px dashed #e5e7eb;
+    }
+
+    .empty-comments svg {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        opacity: 0.3;
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -118,7 +271,7 @@
     </div>
 
     <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
         </svg>
     </div>
@@ -321,52 +474,63 @@
     </div>
 </section>
 
-<!-- Pesan dari Pengunjung Section -->
+<!-- Pesan dari Pengunjung Section - Blogspot Style -->
 @if($pesan_ditampilkan->count() > 0)
 <section class="py-20 md:py-32 bg-gradient-to-b from-white to-gray-50">
     <div class="container-custom">
         <div class="text-center mb-16 animate-on-scroll">
-            <span class="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">Testimoni</span>
+            <span class="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
+                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                {{ $pesan_ditampilkan->count() }} Komentar
+            </span>
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 Pesan dari <span class="gradient-text">Pengunjung</span>
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Apa yang mereka katakan tentang kami
+                Apa yang mereka katakan tentang SMP 54 Surabaya
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="max-w-4xl mx-auto space-y-6">
             @foreach($pesan_ditampilkan as $pesan)
-            <div class="news-card group animate-on-scroll hover:shadow-2xl transition-all duration-300" style="animation-delay: {{ $loop->index * 0.1 }}s;">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            <div class="comment-card animate-on-scroll" style="animation-delay: {{ $loop->index * 0.1 }}s;">
+                <div class="comment-header">
+                    <div class="comment-avatar">
                         {{ strtoupper(substr($pesan->nama, 0, 1)) }}
                     </div>
-                    <div class="flex-1">
-                        <h3 class="font-bold text-gray-900 text-lg">{{ $pesan->nama }}</h3>
-                        <p class="text-sm text-gray-500">{{ $pesan->created_at->diffForHumans() }}</p>
+                    <div class="comment-meta">
+                        <h3 class="comment-author">{{ $pesan->nama }}</h3>
+                        <div class="comment-date">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>{{ $pesan->created_at->diffForHumans() }}</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
-                        {{ $pesan->subjek }}
-                    </span>
+                <div class="comment-subject">
+                    <svg class="w-3.5 h-3.5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                    {{ $pesan->subjek }}
                 </div>
 
-                <p class="text-gray-600 leading-relaxed line-clamp-4">
+                <div class="comment-body">
                     {{ $pesan->pesan }}
-                </p>
+                </div>
 
-                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <a href="mailto:{{ $pesan->email }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1 transition-colors">
+                <div class="comment-actions">
+                    <a href="mailto:{{ $pesan->email }}" class="comment-action-btn reply">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                        Balas
+                        Balas via Email
                     </a>
                     @if($pesan->telepon)
-                    <a href="tel:{{ $pesan->telepon }}" class="text-sm text-green-600 hover:text-green-700 font-medium flex items-center gap-1 transition-colors">
+                    <a href="tel:{{ $pesan->telepon }}" class="comment-action-btn call">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                         </svg>
@@ -379,10 +543,24 @@
         </div>
     </div>
 </section>
+@else
+<section class="py-20 md:py-32 bg-gradient-to-b from-white to-gray-50">
+    <div class="container-custom">
+        <div class="max-w-3xl mx-auto">
+            <div class="empty-comments animate-on-scroll">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-gray-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Belum Ada Komentar</h3>
+                <p class="text-gray-500">Jadilah yang pertama untuk meninggalkan pesan!</p>
+            </div>
+        </div>
+    </div>
+</section>
 @endif
 
 <!-- Map Section -->
-<section class="py-20 md:py-32 bg-gradient-to-b from-gray-50 to-white">
+<section class="py-20 md:py-32 bg-white">
     <div class="container-custom">
         <div class="text-center mb-16 animate-on-scroll">
             <span class="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">Lokasi Kami</span>
@@ -537,6 +715,21 @@
             fillOpacity: 0.1,
             radius: 100
         }).addTo(map);
+
+        // Scroll animations
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight - 100;
+                if (isVisible) {
+                    el.classList.add('animate-in');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', animateOnScroll);
+        animateOnScroll();
     });
 </script>
 @endsection
