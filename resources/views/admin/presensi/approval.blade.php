@@ -3,6 +3,9 @@
 @section('page-title', 'Approval Presensi')
 
 @section('content')
+<!-- Include Toast Component -->
+<x-toast-notification />
+
 <div class="mb-6">
     <h2 class="text-2xl font-bold text-gray-900">Approval Pengajuan Izin & Sakit</h2>
     <p class="text-gray-600 mt-1">Kelola persetujuan pengajuan izin dan sakit dari siswa</p>
@@ -119,6 +122,7 @@
                 </select>
             </div>
 
+            @if(in_array($filter, ['pending', 'approved', 'all']))
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Tipe</label>
                 <select name="tipe" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
@@ -127,6 +131,7 @@
                     <option value="sakit" {{ request('tipe') == 'sakit' ? 'selected' : '' }}>Sakit</option>
                 </select>
             </div>
+            @endif
 
             <div class="flex gap-2">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
@@ -165,10 +170,16 @@
                                 <div class="flex-1">
                                     <div class="flex items-center gap-2 mb-1">
                                         <h3 class="text-lg font-semibold text-gray-900">{{ $item->user->name }}</h3>
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                                            {{ $item->status === 'izin' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800' }}">
-                                            {{ ucfirst($item->status) }}
-                                        </span>
+                                        @if($item->status === 'tidak_hadir' && $item->rejected_at)
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                                Ditolak
+                                            </span>
+                                        @else
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                                {{ $item->status === 'izin' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800' }}">
+                                                {{ ucfirst($item->status) }}
+                                            </span>
+                                        @endif
                                     </div>
                                     <p class="text-sm text-gray-600">{{ $item->user->nis }} • {{ $item->user->kelas->nama_kelas ?? '-' }}</p>
                                     <p class="text-sm text-gray-500 mt-1">
@@ -370,19 +381,20 @@ async function confirmApprove() {
         const data = await response.json();
 
         if (data.success) {
-            showAlert('success', data.message);
+            // Gunakan Toast Notification
+            window.toast.success('Berhasil!', data.message);
             closeApproveModal();
 
-            // Remove atau update element
+            // Reload page setelah 1 detik
             setTimeout(() => {
                 location.reload();
             }, 1000);
         } else {
-            showAlert('error', data.message);
+            window.toast.error('Gagal!', data.message);
         }
     } catch (error) {
         console.error('Error:', error);
-        showAlert('error', 'Terjadi kesalahan saat memproses persetujuan');
+        window.toast.error('Error!', 'Terjadi kesalahan saat memproses persetujuan');
     }
 }
 
@@ -416,19 +428,20 @@ async function confirmReject() {
         const data = await response.json();
 
         if (data.success) {
-            showAlert('success', data.message);
+            // Gunakan Toast Notification
+            window.toast.success('Berhasil!', data.message);
             closeRejectModal();
 
-            // Reload page
+            // Reload page setelah 1 detik
             setTimeout(() => {
                 location.reload();
             }, 1000);
         } else {
-            showAlert('error', data.message);
+            window.toast.error('Gagal!', data.message);
         }
     } catch (error) {
         console.error('Error:', error);
-        showAlert('error', 'Terjadi kesalahan saat memproses penolakan');
+        window.toast.error('Error!', 'Terjadi kesalahan saat memproses penolakan');
     }
 }
 
@@ -443,31 +456,6 @@ function openImageModal(imageSrc, caption) {
 function closeImageModal() {
     document.getElementById('imageModal').classList.add('hidden');
     document.body.style.overflow = 'auto';
-}
-
-// Alert Function
-function showAlert(type, message) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `fixed top-4 right-4 z-50 max-w-md px-6 py-4 rounded-lg shadow-lg ${
-        type === 'success' ? 'bg-green-500' : 'bg-red-500'
-    } text-white`;
-    alertDiv.innerHTML = `
-        <div class="flex items-center gap-3">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                ${type === 'success'
-                    ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
-                    : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
-                }
-            </svg>
-            <span>${message}</span>
-        </div>
-    `;
-    document.body.appendChild(alertDiv);
-
-    setTimeout(() => {
-        alertDiv.style.animation = 'slideOutRight 0.4s ease-out';
-        setTimeout(() => alertDiv.remove(), 400);
-    }, 3000);
 }
 
 // Close modals on Escape key
@@ -486,17 +474,4 @@ document.getElementById('imageModal')?.addEventListener('click', function(e) {
     }
 });
 </script>
-
-<style>
-@keyframes slideOutRight {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(100px);
-    }
-}
-</style>
 @endsection

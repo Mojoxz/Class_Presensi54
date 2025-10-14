@@ -112,16 +112,19 @@ class Presensi extends Model
      */
     public function scopeApproved($query)
     {
-        return $query->where('is_approved', true);
+        return $query->where('is_approved', true)
+                    ->whereNotNull('approved_at');
     }
 
     /**
      * Scope untuk presensi yang ditolak
+     * PERBAIKAN: Tambahkan kondisi untuk memastikan data benar-benar ditolak
      */
     public function scopeRejected($query)
     {
         return $query->where('is_approved', false)
-                    ->whereNotNull('rejected_at');
+                    ->whereNotNull('rejected_at')
+                    ->whereNotNull('rejected_by');
     }
 
     /**
@@ -144,13 +147,18 @@ class Presensi extends Model
      */
     public function getApprovalStatusAttribute()
     {
+        // Cek dulu apakah ini pengajuan yang memerlukan approval
         if (!in_array($this->status, ['izin', 'sakit'])) {
+            // Jika status sudah tidak_hadir dan ada rejected_at, berarti ini hasil penolakan
+            if ($this->status === 'tidak_hadir' && $this->rejected_at !== null) {
+                return 'rejected';
+            }
             return null;
         }
 
         if ($this->is_approved === true) {
             return 'approved';
-        } elseif ($this->is_approved === false) {
+        } elseif ($this->is_approved === false && $this->rejected_at !== null) {
             return 'rejected';
         } else {
             return 'pending';

@@ -196,6 +196,7 @@ class PresensiController extends Controller
 
     /**
      * Reject pengajuan izin/sakit
+     * PERBAIKAN: Pastikan semua field ter-update dengan benar
      */
     public function reject(Request $request, $id)
     {
@@ -224,6 +225,7 @@ class PresensiController extends Controller
                 'alasan_penolakan' => 'required|string|min:10|max:500'
             ]);
 
+            // PERBAIKAN: Update dengan semua field yang diperlukan
             $presensi->update([
                 'is_approved' => false,
                 'status' => 'tidak_hadir', // Ubah status jadi tidak hadir
@@ -253,21 +255,36 @@ class PresensiController extends Controller
 
     /**
      * Halaman approval pengajuan izin/sakit
+     * PERBAIKAN: Query untuk rejected juga harus include yang statusnya tidak_hadir
      */
     public function approval(Request $request)
     {
-        $query = Presensi::with(['user', 'user.kelas'])
-                        ->whereIn('status', ['izin', 'sakit']);
+        $query = Presensi::with(['user', 'user.kelas', 'approver', 'rejecter']);
 
         // Filter berdasarkan status approval
         $filter = $request->get('filter', 'pending');
 
         if ($filter === 'pending') {
-            $query->pendingApproval();
+            $query->whereIn('status', ['izin', 'sakit'])->pendingApproval();
         } elseif ($filter === 'approved') {
-            $query->approved();
+            $query->whereIn('status', ['izin', 'sakit'])->approved();
         } elseif ($filter === 'rejected') {
-            $query->rejected();
+            // PERBAIKAN: Query untuk yang ditolak
+            $query->where(function($q) {
+                $q->where('status', 'tidak_hadir')
+                  ->where('is_approved', false)
+                  ->whereNotNull('rejected_at')
+                  ->whereNotNull('rejected_by');
+            });
+        } elseif ($filter === 'all') {
+            // Untuk all, tampilkan semua yang pernah mengajukan izin/sakit
+            $query->where(function($q) {
+                $q->whereIn('status', ['izin', 'sakit'])
+                  ->orWhere(function($subQ) {
+                      $subQ->where('status', 'tidak_hadir')
+                           ->whereNotNull('rejected_at');
+                  });
+            });
         }
 
         // Filter berdasarkan tanggal
@@ -286,20 +303,32 @@ class PresensiController extends Controller
             });
         }
 
-        // Filter berdasarkan tipe (izin/sakit)
-        if ($request->has('tipe') && $request->tipe) {
-            $query->where('status', $request->tipe);
+        // Filter berdasarkan tipe (izin/sakit) - hanya untuk pending & approved
+        if ($request->has('tipe') && $request->tipe && in_array($filter, ['pending', 'approved', 'all'])) {
+            if ($filter !== 'all') {
+                $query->where('status', $request->tipe);
+            }
         }
 
         $pengajuan = $query->latest()->paginate(15);
         $kelas = Kelas::all();
 
-        // Statistik
+        // Statistik - PERBAIKAN: Hitung rejected dengan benar
         $statistik = [
             'pending' => Presensi::whereIn('status', ['izin', 'sakit'])->pendingApproval()->count(),
             'approved' => Presensi::whereIn('status', ['izin', 'sakit'])->approved()->count(),
-            'rejected' => Presensi::whereIn('status', ['izin', 'sakit'])->rejected()->count(),
-            'total' => Presensi::whereIn('status', ['izin', 'sakit'])->count(),
+            'rejected' => Presensi::where('status', 'tidak_hadir')
+                                  ->where('is_approved', false)
+                                  ->whereNotNull('rejected_at')
+                                  ->whereNotNull('rejected_by')
+                                  ->count(),
+            'total' => Presensi::where(function($q) {
+                          $q->whereIn('status', ['izin', 'sakit'])
+                            ->orWhere(function($subQ) {
+                                $subQ->where('status', 'tidak_hadir')
+                                     ->whereNotNull('rejected_at');
+                            });
+                      })->count(),
         ];
 
         return view('admin.presensi.approval', compact('pengajuan', 'kelas', 'statistik', 'filter'));
