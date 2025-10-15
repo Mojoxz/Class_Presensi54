@@ -41,9 +41,6 @@
 
                 <!-- CTA Buttons - Now on the Right -->
                 <div class="hidden lg:flex items-center space-x-3 ml-auto">
-                    <!-- <a href="{{ route('admin.login') }}" class="text-sm font-medium text-gray-700 hover:text-purple-600 px-4 py-2 rounded-lg transition-colors">
-                        Admin
-                    </a> -->
                     <a href="{{ route('student.login') }}" class="btn-gradient">
                         <span>Portal Siswa</span>
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,9 +132,7 @@
                 <!-- About Column -->
                 <div class="space-y-4">
                     <div class="flex items-center space-x-3 mb-6">
-                        <div class="logo-circle bg-white/10">
-                            <span class="text-xl font-bold text-white">54</span>
-                        </div>
+                        <img src="{{ asset('logo_header.png') }}" alt="Logo SMP 54" class="h-12">
                         <div>
                             <div class="text-lg font-bold text-white">SMP 54 Surabaya</div>
                         </div>
@@ -192,19 +187,21 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
-                            <span>Jl. Contoh No. 123<br>Surabaya, Jawa Timur</span>
+                            <a href="https://maps.google.com/?q=Jl.+Kyai+Tambak+Deres+No.293,+Bulak,+Kec.+Bulak,+Surabaya,+Jawa+Timur+60124" target="_blank" rel="noopener noreferrer" class="footer-link">
+                                Jl. Kyai Tambak Deres No.293<br>Bulak, Kec. Bulak, Surabaya<br>Jawa Timur 60124
+                            </a>
                         </li>
                         <li class="flex items-center gap-3">
                             <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                             </svg>
-                            <span>(031) 123-4567</span>
+                            <a href="tel:+6231123456" class="footer-link">(031) 123-4567</a>
                         </li>
                         <li class="flex items-center gap-3">
                             <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                             </svg>
-                            <span>info@smp54.sch.id</span>
+                            <a href="mailto:info@smp54.sch.id" class="footer-link">info@smp54.sch.id</a>
                         </li>
                     </ul>
                 </div>
