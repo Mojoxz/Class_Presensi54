@@ -305,9 +305,9 @@
                         <div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Alamat Sekolah</h3>
                             <p class="text-gray-600 leading-relaxed">
-                                Jl. Raya Gubeng No. 54<br>
-                                Gubeng, Surabaya<br>
-                                Jawa Timur 60281
+                                Jl. Kyai Tambak Deres No.293<br>
+                                 Bulak, Kec. Bulak<br>
+                                Surabaya, Jawa Timur 60124
                             </p>
                         </div>
                     </div>
@@ -354,9 +354,8 @@
                         <div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Jam Operasional</h3>
                             <p class="text-gray-600 leading-relaxed">
-                                Senin - Jumat: 07:00 - 15:00<br>
-                                Sabtu: 07:00 - 12:00<br>
-                                Minggu: Tutup
+                                Senin - Jumat  : 07:00 - 15:00<br>
+                                Sabtu - Minggu : Tutup
                             </p>
                         </div>
                     </div>
