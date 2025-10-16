@@ -35,7 +35,16 @@ class PresensiController extends Controller
         $jamTutupKeluar = Carbon::today()->setTime(18, 0, 0); // 18:00
 
         $bolehMasuk = $jamSekarang->between($jamBukaMasuk, $jamTutupMasuk);
-        $bolehKeluar = $jamSekarang->between($jamBukaKeluar, $jamTutupKeluar);
+
+        // Presensi keluar hanya boleh jika:
+        // 1. Dalam jam operasional keluar
+        // 2. Sudah ada presensi hari ini
+        // 3. Presensi hari ini adalah status 'hadir' (bukan izin/sakit)
+        // 4. Belum presensi keluar
+        $bolehKeluar = $jamSekarang->between($jamBukaKeluar, $jamTutupKeluar)
+                      && $presensiHariIni
+                      && $presensiHariIni->status === 'hadir'
+                      && !$presensiHariIni->jam_keluar;
 
         // Statistik presensi bulan ini
         $statistik = [
@@ -130,6 +139,33 @@ class PresensiController extends Controller
         $today = Carbon::today();
         $jamSekarang = Carbon::now();
 
+        // Cari presensi hari ini
+        $presensi = Presensi::getPresensiToday($user->id);
+
+        // Validasi: Harus sudah presensi masuk terlebih dahulu
+        if (!$presensi) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda belum melakukan presensi masuk hari ini'
+            ], 400);
+        }
+
+        // Validasi: Presensi harus berstatus 'hadir', tidak boleh 'izin' atau 'sakit'
+        if ($presensi->status !== 'hadir') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Presensi keluar hanya dapat dilakukan jika status presensi adalah "Hadir"'
+            ], 400);
+        }
+
+        // Validasi: Belum melakukan presensi keluar
+        if ($presensi->jam_keluar) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah melakukan presensi keluar'
+            ], 400);
+        }
+
         // Validasi jam operasional
         $jamBukaKeluar = Carbon::today()->setTime(14, 0, 0);
         $jamTutupKeluar = Carbon::today()->setTime(18, 0, 0);
@@ -138,23 +174,6 @@ class PresensiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Presensi keluar hanya bisa dilakukan antara jam 14:00 - 18:00'
-            ], 400);
-        }
-
-        // Cari presensi hari ini
-        $presensi = Presensi::getPresensiToday($user->id);
-
-        if (!$presensi) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anda belum melakukan presensi masuk'
-            ], 400);
-        }
-
-        if ($presensi->jam_keluar) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anda sudah melakukan presensi keluar'
             ], 400);
         }
 
