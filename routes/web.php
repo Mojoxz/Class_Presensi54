@@ -113,6 +113,8 @@ Route::middleware(['auth', 'role:student', 'session.timeout'])->prefix('student'
     Route::post('/presensi/keluar', [StudentPresensiController::class, 'keluar'])->name('presensi.keluar');
     Route::post('/presensi/izin', [StudentPresensiController::class, 'izin'])->name('presensi.izin');
     Route::post('/presensi/sakit', [StudentPresensiController::class, 'sakit'])->name('presensi.sakit');
+    Route::post('/presensi/update-to-izin', [StudentPresensiController::class, 'updateToIzin'])->name('presensi.update-izin');
+    Route::post('/presensi/update-to-sakit', [StudentPresensiController::class, 'updateToSakit'])->name('presensi.update-sakit');
 
     // Profile
     Route::get('/profile', [StudentProfileController::class, 'index'])->name('profile');
