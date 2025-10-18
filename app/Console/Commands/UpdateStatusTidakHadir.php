@@ -42,6 +42,7 @@ class UpdateStatusTidakHadir extends Command
 
         $totalSiswa = $siswaList->count();
         $tidakHadirCount = 0;
+        $sudahPresensiCount = 0;
 
         $this->info("Total siswa aktif: {$totalSiswa}");
 
@@ -65,16 +66,33 @@ class UpdateStatusTidakHadir extends Command
                 ]);
 
                 $tidakHadirCount++;
-                $this->line("✓ {$siswa->name} ({$siswa->nim}) - Status: TIDAK HADIR (dibuat otomatis)");
+                $this->line("✓ {$siswa->name} ({$siswa->nis}) - Status: TIDAK HADIR (dibuat otomatis)");
             } else {
                 // Jika ada presensi, cek statusnya
-                $this->line("- {$siswa->name} ({$siswa->nim}) - Status: {$presensi->status}");
+                $statusDisplay = ucfirst(str_replace('_', ' ', $presensi->status));
+
+                // Tampilkan info approval status untuk izin/sakit
+                if (in_array($presensi->status, ['izin', 'sakit'])) {
+                    $approvalInfo = '';
+                    if ($presensi->is_approved === true) {
+                        $approvalInfo = ' (Disetujui)';
+                    } elseif ($presensi->is_approved === false) {
+                        $approvalInfo = ' (Ditolak)';
+                    } else {
+                        $approvalInfo = ' (Pending)';
+                    }
+                    $statusDisplay .= $approvalInfo;
+                }
+
+                $this->line("- {$siswa->name} ({$siswa->nis}) - Status: {$statusDisplay}");
+                $sudahPresensiCount++;
             }
         }
 
         $this->newLine();
         $this->info("=== SUMMARY ===");
         $this->info("Total siswa dicek: {$totalSiswa}");
+        $this->info("Siswa sudah presensi: {$sudahPresensiCount}");
         $this->info("Siswa tidak hadir (otomatis): {$tidakHadirCount}");
         $this->info("Proses selesai!");
 

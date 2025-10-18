@@ -1,5 +1,5 @@
 <?php
-        
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -51,6 +51,7 @@ class UpdateStatusTidakHadirToday extends Command
 
         $totalSiswa = $siswaList->count();
         $tidakHadirCount = 0;
+        $sudahPresensiCount = 0;
 
         $this->info("Total siswa aktif: {$totalSiswa}");
 
@@ -74,15 +75,33 @@ class UpdateStatusTidakHadirToday extends Command
                 ]);
 
                 $tidakHadirCount++;
-                $this->line("✓ {$siswa->name} ({$siswa->nim}) - Status: TIDAK HADIR (dibuat otomatis)");
+                $this->line("✓ {$siswa->name} ({$siswa->nis}) - Status: TIDAK HADIR (dibuat otomatis)");
             } else {
-                $this->line("- {$siswa->name} ({$siswa->nim}) - Status: {$presensi->status}");
+                // Jika ada presensi, tampilkan statusnya
+                $statusDisplay = ucfirst(str_replace('_', ' ', $presensi->status));
+
+                // Tampilkan info approval status untuk izin/sakit
+                if (in_array($presensi->status, ['izin', 'sakit'])) {
+                    $approvalInfo = '';
+                    if ($presensi->is_approved === true) {
+                        $approvalInfo = ' (Disetujui)';
+                    } elseif ($presensi->is_approved === false) {
+                        $approvalInfo = ' (Ditolak)';
+                    } else {
+                        $approvalInfo = ' (Pending)';
+                    }
+                    $statusDisplay .= $approvalInfo;
+                }
+
+                $this->line("- {$siswa->name} ({$siswa->nis}) - Status: {$statusDisplay}");
+                $sudahPresensiCount++;
             }
         }
 
         $this->newLine();
         $this->info("=== SUMMARY ===");
         $this->info("Total siswa dicek: {$totalSiswa}");
+        $this->info("Siswa sudah presensi: {$sudahPresensiCount}");
         $this->info("Siswa tidak hadir (otomatis): {$tidakHadirCount}");
         $this->info("Proses selesai!");
 

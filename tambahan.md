@@ -14,10 +14,9 @@ tambahan murid side
 
 PR TERARU
 
-1. error di export murid
-2. sama ada error double ketika njalanin commands update presensi untuk izin jadi terupdate (tidak hadir) 
-3. bisa merubah tipe presensi jika ada tbtb sakit
-4. jika murid sudah tidak presensi masuk maka otomatis untuk presensi keluar tidak dapat dilakukan
+1. error di export murid belum
+2. sama ada error double ketika njalanin commands update presensi untuk izin jadi terupdate (tidak hadir) belum
+4. jika murid sudah tidak presensi masuk maka otomatis untuk presensi keluar tidak dapat dilakukan (sudah amnan)
 
 untuk menjalankan command presensi 
 1. php artisan presensi:sesuai nama commands

@@ -409,9 +409,13 @@
     </div>
 </div>
 
+// Tambahkan script ini di bagian bawah file blade Anda, ganti script yang lama
+
 <script>
-// Select All functionality
-document.getElementById('selectAll').addEventListener('change', function() {
+// ============================================
+// SELECT ALL FUNCTIONALITY
+// ============================================
+document.getElementById('selectAll')?.addEventListener('change', function() {
     const checkboxes = document.querySelectorAll('.row-checkbox');
     checkboxes.forEach(checkbox => {
         checkbox.checked = this.checked;
@@ -430,36 +434,49 @@ function updateBulkActions() {
     const selectedCount = document.getElementById('selectedCount');
 
     if (checkedBoxes.length > 0) {
-        bulkActions.classList.remove('hidden');
-        selectedCount.textContent = checkedBoxes.length;
+        bulkActions?.classList.remove('hidden');
+        if (selectedCount) selectedCount.textContent = checkedBoxes.length;
     } else {
-        bulkActions.classList.add('hidden');
+        bulkActions?.classList.add('hidden');
     }
 
     // Update select all checkbox
     const selectAll = document.getElementById('selectAll');
     const allCheckboxes = document.querySelectorAll('.row-checkbox');
-    selectAll.checked = checkedBoxes.length === allCheckboxes.length;
-    selectAll.indeterminate = checkedBoxes.length > 0 && checkedBoxes.length < allCheckboxes.length;
+    if (selectAll) {
+        selectAll.checked = checkedBoxes.length === allCheckboxes.length;
+        selectAll.indeterminate = checkedBoxes.length > 0 && checkedBoxes.length < allCheckboxes.length;
+    }
 }
 
 function clearSelection() {
     document.querySelectorAll('.row-checkbox').forEach(checkbox => {
         checkbox.checked = false;
     });
-    document.getElementById('selectAll').checked = false;
+    const selectAll = document.getElementById('selectAll');
+    if (selectAll) selectAll.checked = false;
     updateBulkActions();
 }
 
+// ============================================
+// DELETE FUNCTIONALITY
+// ============================================
 function deleteItem(id, name) {
-    document.getElementById('deleteName').textContent = name;
-    document.getElementById('deleteForm').action = `/admin/murid/${id}`;
-    document.getElementById('deleteModal').classList.remove('hidden');
+    const deleteNameEl = document.getElementById('deleteName');
+    const deleteFormEl = document.getElementById('deleteForm');
+    const deleteModalEl = document.getElementById('deleteModal');
+
+    if (deleteNameEl) deleteNameEl.textContent = name;
+    if (deleteFormEl) deleteFormEl.action = `/admin/murid/${id}`;
+    if (deleteModalEl) deleteModalEl.classList.remove('hidden');
 }
 
 function bulkDelete() {
     const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-    if (checkedBoxes.length === 0) return;
+    if (checkedBoxes.length === 0) {
+        alert('Pilih minimal satu murid untuk dihapus');
+        return;
+    }
 
     const ids = Array.from(checkedBoxes).map(cb => cb.value);
 
@@ -467,7 +484,7 @@ function bulkDelete() {
         // Create form for bulk delete
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '{{ route("admin.murid.bulk-delete") }}'; // You need to add this route
+        form.action = '{{ route("admin.murid.bulk-delete") }}';
 
         // Add CSRF token
         const csrfField = document.createElement('input');
@@ -497,18 +514,46 @@ function bulkDelete() {
     }
 }
 
+// ============================================
+// EXPORT FUNCTIONALITY - FIXED
+// ============================================
 function exportData() {
-    const params = new URLSearchParams(window.location.search);
-    const exportUrl = '{{ route("admin.murid.export") }}?' + params.toString();
-    window.open(exportUrl, '_blank');
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const exportUrl = '{{ route("admin.murid.export") }}?' + params.toString();
+
+        console.log('Exporting to:', exportUrl); // Debug log
+
+        // Method 1: Direct window.location (more reliable)
+        window.location.href = exportUrl;
+
+        // Alternative Method 2: If you want to open in new tab
+        // window.open(exportUrl, '_blank');
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('Terjadi kesalahan saat export data. Silakan coba lagi.');
+    }
 }
 
+// Initialize export button (jika dipanggil dari file lain)
+function initializeExportButtons() {
+    const exportBtn = document.querySelector('[onclick*="exportData"]');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            exportData();
+        });
+    }
+}
+
+// ============================================
+// TABLE SCROLL HINT
+// ============================================
 document.addEventListener('DOMContentLoaded', function() {
     const tableWrapper = document.querySelector('.admin-table-wrapper');
     const scrollHint = document.querySelector('.table-scroll-hint');
 
     if (tableWrapper && scrollHint) {
-        // Hide hint after user scrolls
         let scrollTimeout;
         tableWrapper.addEventListener('scroll', function() {
             clearTimeout(scrollTimeout);
@@ -532,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Touch swipe enhancement for better mobile experience
+    // Touch swipe enhancement
     if (tableWrapper && 'ontouchstart' in window) {
         let startX, scrollLeft;
 
@@ -544,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tableWrapper.addEventListener('touchmove', function(e) {
             if (!startX) return;
             const x = e.touches[0].pageX - tableWrapper.offsetLeft;
-            const walk = (x - startX) * 2; // Scroll speed multiplier
+            const walk = (x - startX) * 2;
             tableWrapper.scrollLeft = scrollLeft - walk;
         });
 
@@ -553,17 +598,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Auto-hide flash messages
+    setTimeout(function() {
+        const flashMessages = document.querySelectorAll('.bg-green-100, .bg-red-100');
+        flashMessages.forEach(function(message) {
+            message.style.transition = 'opacity 0.5s';
+            message.style.opacity = '0';
+            setTimeout(function() {
+                message.remove();
+            }, 500);
+        });
+    }, 5000);
 
-// Auto-hide flash messages
-setTimeout(function() {
-    const flashMessages = document.querySelectorAll('.bg-green-100, .bg-red-100');
-    flashMessages.forEach(function(message) {
-        message.style.transition = 'opacity 0.5s';
-        message.style.opacity = '0';
-        setTimeout(function() {
-            message.remove();
-        }, 500);
-    });
-}, 5000);
+    // Initialize export buttons if needed
+    initializeExportButtons();
+});
+
+// Make functions globally available
+window.deleteItem = deleteItem;
+window.bulkDelete = bulkDelete;
+window.exportData = exportData;
+window.clearSelection = clearSelection;
+window.initializeExportButtons = initializeExportButtons;
 </script>
 @endsection
