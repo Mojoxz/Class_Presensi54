@@ -17,6 +17,9 @@ class PresensiController extends Controller
         $user = auth()->user();
         $today = Carbon::today();
 
+        // Cek apakah hari ini adalah hari Minggu (0 = Minggu)
+        $isHariMinggu = Carbon::now()->dayOfWeek === Carbon::SUNDAY;
+
         // Cek presensi hari ini
         $presensiHariIni = Presensi::getPresensiToday($user->id);
 
@@ -34,14 +37,17 @@ class PresensiController extends Controller
         $jamBukaKeluar = Carbon::today()->setTime(14, 0, 0); // 14:00
         $jamTutupKeluar = Carbon::today()->setTime(18, 0, 0); // 18:00
 
-        $bolehMasuk = $jamSekarang->between($jamBukaMasuk, $jamTutupMasuk);
+        // Presensi tidak boleh di hari Minggu
+        $bolehMasuk = !$isHariMinggu && $jamSekarang->between($jamBukaMasuk, $jamTutupMasuk);
 
         // Presensi keluar hanya boleh jika:
-        // 1. Dalam jam operasional keluar
-        // 2. Sudah ada presensi hari ini
-        // 3. Presensi hari ini adalah status 'hadir' (bukan izin/sakit)
-        // 4. Belum presensi keluar
-        $bolehKeluar = $jamSekarang->between($jamBukaKeluar, $jamTutupKeluar)
+        // 1. Bukan hari Minggu
+        // 2. Dalam jam operasional keluar
+        // 3. Sudah ada presensi hari ini
+        // 4. Presensi hari ini adalah status 'hadir' (bukan izin/sakit)
+        // 5. Belum presensi keluar
+        $bolehKeluar = !$isHariMinggu
+                      && $jamSekarang->between($jamBukaKeluar, $jamTutupKeluar)
                       && $presensiHariIni
                       && $presensiHariIni->status === 'hadir'
                       && !$presensiHariIni->jam_keluar;
@@ -59,7 +65,8 @@ class PresensiController extends Controller
             'presensiRiwayat',
             'bolehMasuk',
             'bolehKeluar',
-            'statistik'
+            'statistik',
+            'isHariMinggu'
         ));
     }
 
@@ -68,6 +75,14 @@ class PresensiController extends Controller
         $user = auth()->user();
         $today = Carbon::today();
         $jamSekarang = Carbon::now();
+
+        // Validasi: Tidak boleh presensi di hari Minggu
+        if ($jamSekarang->dayOfWeek === Carbon::SUNDAY) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Presensi tidak dapat dilakukan pada hari Minggu. Selamat beristirahat! 🌴'
+            ], 400);
+        }
 
         // Validasi jam operasional
         $jamBukaMasuk = Carbon::today()->setTime(6, 0, 0);
@@ -138,6 +153,14 @@ class PresensiController extends Controller
         $user = auth()->user();
         $today = Carbon::today();
         $jamSekarang = Carbon::now();
+
+        // Validasi: Tidak boleh presensi di hari Minggu
+        if ($jamSekarang->dayOfWeek === Carbon::SUNDAY) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Presensi tidak dapat dilakukan pada hari Minggu. Selamat beristirahat! 🌴'
+            ], 400);
+        }
 
         // Cari presensi hari ini
         $presensi = Presensi::getPresensiToday($user->id);
@@ -210,6 +233,15 @@ class PresensiController extends Controller
     {
         $user = auth()->user();
         $today = Carbon::today();
+        $jamSekarang = Carbon::now();
+
+        // Validasi: Tidak boleh mengajukan izin di hari Minggu
+        if ($jamSekarang->dayOfWeek === Carbon::SUNDAY) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pengajuan izin tidak dapat dilakukan pada hari Minggu karena tidak ada kegiatan sekolah. 🌴'
+            ], 400);
+        }
 
         // Cek apakah sudah ada presensi hari ini
         $existingPresensi = Presensi::getPresensiToday($user->id);
@@ -256,6 +288,15 @@ class PresensiController extends Controller
     {
         $user = auth()->user();
         $today = Carbon::today();
+        $jamSekarang = Carbon::now();
+
+        // Validasi: Tidak boleh melapor sakit di hari Minggu
+        if ($jamSekarang->dayOfWeek === Carbon::SUNDAY) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Laporan sakit tidak dapat dilakukan pada hari Minggu karena tidak ada kegiatan sekolah. 🌴'
+            ], 400);
+        }
 
         // Cek apakah sudah ada presensi hari ini
         $existingPresensi = Presensi::getPresensiToday($user->id);

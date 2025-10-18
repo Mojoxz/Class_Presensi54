@@ -79,7 +79,29 @@
 <div class="bg-white rounded-xl shadow-xl p-6 mb-8">
     <h3 class="text-xl font-semibold text-gray-900 mb-6">Presensi Hari Ini</h3>
 
-    @if($presensiHariIni)
+
+    @if($isHariMinggu)
+        <!-- Tampilan Khusus Hari Minggu -->
+        <div class="text-center py-12">
+            <div class="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-8 max-w-md mx-auto">
+                <svg class="w-24 h-24 text-blue-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <h3 class="text-2xl font-bold text-blue-900 mb-3">🌴 Hari Libur - Minggu</h3>
+                <p class="text-blue-700 mb-4 text-lg">Tidak ada kegiatan sekolah pada hari ini</p>
+                <p class="text-blue-600 text-sm">Selamat beristirahat dan nikmati waktu liburmu! 😊</p>
+                <div class="mt-6 p-4 bg-white bg-opacity-50 rounded-lg">
+                    <p class="text-sm text-blue-800">
+                        <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <strong>Info:</strong> Presensi dapat dilakukan kembali pada hari Senin - Sabtu
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    @elseif($presensiHariIni)
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Status Presensi Masuk atau Izin/Sakit -->
             @if(in_array($presensiHariIni->status, ['izin', 'sakit']))
