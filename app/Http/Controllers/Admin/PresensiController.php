@@ -18,16 +18,23 @@ class PresensiController extends Controller
         $query = Presensi::with(['user', 'user.kelas', 'approver', 'rejecter']);
 
         // Filter berdasarkan tanggal
-        if ($request->has('tanggal') && $request->tanggal) {
-            $query->where('tanggal', $request->tanggal);
-        } else {
-            $query->where('tanggal', Carbon::today());
-        }
+        $tanggal = $request->get('tanggal', Carbon::today()->format('Y-m-d'));
+        $query->where('tanggal', $tanggal);
 
         // Filter berdasarkan kelas
-        if ($request->has('kelas_id') && $request->kelas_id) {
-            $query->whereHas('user', function($q) use ($request) {
-                $q->where('kelas_id', $request->kelas_id);
+        $kelasId = $request->get('kelas_id');
+        if ($kelasId) {
+            $query->whereHas('user', function($q) use ($kelasId) {
+                $q->where('kelas_id', $kelasId);
+            });
+        }
+
+        // Filter berdasarkan search (nama atau NIS)
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->whereHas('user', function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('nis', 'like', '%' . $search . '%');
             });
         }
 
@@ -50,15 +57,32 @@ class PresensiController extends Controller
         $presensi = $query->latest()->paginate(20);
         $kelas = Kelas::all();
 
-        // Statistik hari ini (atau tanggal yang dipilih)
-        $tanggal = $request->get('tanggal', Carbon::today()->format('Y-m-d'));
+        // Statistik berdasarkan filter yang aktif
+        $statistikQuery = Presensi::whereDate('tanggal', $tanggal);
+
+        // Terapkan filter kelas pada statistik
+        if ($kelasId) {
+            $statistikQuery->whereHas('user', function($q) use ($kelasId) {
+                $q->where('kelas_id', $kelasId);
+            });
+        }
+
+        // Terapkan filter search pada statistik
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $statistikQuery->whereHas('user', function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('nis', 'like', '%' . $search . '%');
+            });
+        }
+
         $statistik = [
-            'total' => Presensi::whereDate('tanggal', $tanggal)->count(),
-            'hadir' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'hadir')->count(),
-            'izin' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'izin')->count(),
-            'sakit' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'sakit')->count(),
-            'tidak_hadir' => Presensi::whereDate('tanggal', $tanggal)->where('status', 'tidak_hadir')->count(),
-            'pending' => Presensi::whereDate('tanggal', $tanggal)->pendingApproval()->count(),
+            'total' => (clone $statistikQuery)->count(),
+            'hadir' => (clone $statistikQuery)->where('status', 'hadir')->count(),
+            'izin' => (clone $statistikQuery)->where('status', 'izin')->count(),
+            'sakit' => (clone $statistikQuery)->where('status', 'sakit')->count(),
+            'tidak_hadir' => (clone $statistikQuery)->where('status', 'tidak_hadir')->count(),
+            'pending' => (clone $statistikQuery)->pendingApproval()->count(),
         ];
 
         return view('admin.presensi.index', compact('presensi', 'kelas', 'statistik'));
@@ -196,7 +220,6 @@ class PresensiController extends Controller
 
     /**
      * Reject pengajuan izin/sakit
-     * PERBAIKAN: Pastikan semua field ter-update dengan benar
      */
     public function reject(Request $request, $id)
     {
@@ -225,10 +248,9 @@ class PresensiController extends Controller
                 'alasan_penolakan' => 'required|string|min:10|max:500'
             ]);
 
-            // PERBAIKAN: Update dengan semua field yang diperlukan
             $presensi->update([
                 'is_approved' => false,
-                'status' => 'tidak_hadir', // Ubah status jadi tidak hadir
+                'status' => 'tidak_hadir',
                 'alasan_penolakan' => $request->alasan_penolakan,
                 'rejected_at' => Carbon::now(),
                 'rejected_by' => auth()->id()
@@ -255,7 +277,6 @@ class PresensiController extends Controller
 
     /**
      * Halaman approval pengajuan izin/sakit
-     * PERBAIKAN: Query untuk rejected juga harus include yang statusnya tidak_hadir
      */
     public function approval(Request $request)
     {
@@ -269,7 +290,6 @@ class PresensiController extends Controller
         } elseif ($filter === 'approved') {
             $query->whereIn('status', ['izin', 'sakit'])->approved();
         } elseif ($filter === 'rejected') {
-            // PERBAIKAN: Query untuk yang ditolak
             $query->where(function($q) {
                 $q->where('status', 'tidak_hadir')
                   ->where('is_approved', false)
@@ -277,7 +297,6 @@ class PresensiController extends Controller
                   ->whereNotNull('rejected_by');
             });
         } elseif ($filter === 'all') {
-            // Untuk all, tampilkan semua yang pernah mengajukan izin/sakit
             $query->where(function($q) {
                 $q->whereIn('status', ['izin', 'sakit'])
                   ->orWhere(function($subQ) {
@@ -303,7 +322,7 @@ class PresensiController extends Controller
             });
         }
 
-        // Filter berdasarkan tipe (izin/sakit) - hanya untuk pending & approved
+        // Filter berdasarkan tipe (izin/sakit)
         if ($request->has('tipe') && $request->tipe && in_array($filter, ['pending', 'approved', 'all'])) {
             if ($filter !== 'all') {
                 $query->where('status', $request->tipe);
@@ -313,7 +332,7 @@ class PresensiController extends Controller
         $pengajuan = $query->latest()->paginate(15);
         $kelas = Kelas::all();
 
-        // Statistik - PERBAIKAN: Hitung rejected dengan benar
+        // Statistik
         $statistik = [
             'pending' => Presensi::whereIn('status', ['izin', 'sakit'])->pendingApproval()->count(),
             'approved' => Presensi::whereIn('status', ['izin', 'sakit'])->approved()->count(),

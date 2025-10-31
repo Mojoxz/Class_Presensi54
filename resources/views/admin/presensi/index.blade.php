@@ -64,56 +64,130 @@
     </div>
 </div>
 
-<!-- Filter -->
+<!-- Filter & Search -->
 <div class="bg-white shadow rounded-lg p-4 mb-6">
-    <form method="GET" action="{{ route('admin.presensi.index') }}" class="flex flex-wrap items-center gap-4">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-            <input type="date" name="tanggal" value="{{ request('tanggal', date('Y-m-d')) }}"
-                   class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+    <form method="GET" action="{{ route('admin.presensi.index') }}" class="space-y-4">
+        <!-- Search Bar -->
+        <div class="flex gap-2">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Cari Siswa
+                </label>
+                <input type="text"
+                       name="search"
+                       value="{{ request('search') }}"
+                       placeholder="Cari nama atau NIS siswa..."
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
-            <select name="kelas_id" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <option value="">Semua Kelas</option>
-                @foreach($kelas as $k)
-                    <option value="{{ $k->id }}" {{ request('kelas_id') == $k->id ? 'selected' : '' }}>
-                        {{ $k->nama_kelas }}
-                    </option>
-                @endforeach
-            </select>
+        <!-- Filter Options -->
+        <div class="flex flex-wrap items-end gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                <input type="date" name="tanggal" value="{{ request('tanggal', date('Y-m-d')) }}"
+                       class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                <select name="kelas_id" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="">Semua Kelas</option>
+                    @foreach($kelas as $k)
+                        <option value="{{ $k->id }}" {{ request('kelas_id') == $k->id ? 'selected' : '' }}>
+                            {{ $k->nama_kelas }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="">Semua Status</option>
+                    <option value="hadir" {{ request('status') == 'hadir' ? 'selected' : '' }}>Hadir</option>
+                    <option value="tidak_hadir" {{ request('status') == 'tidak_hadir' ? 'selected' : '' }}>Tidak Hadir</option>
+                    <option value="izin" {{ request('status') == 'izin' ? 'selected' : '' }}>Izin</option>
+                    <option value="sakit" {{ request('status') == 'sakit' ? 'selected' : '' }}>Sakit</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Approval</label>
+                <select name="approval_status" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="">Semua</option>
+                    <option value="pending" {{ request('approval_status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="approved" {{ request('approval_status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                    <option value="rejected" {{ request('approval_status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                </select>
+            </div>
+
+            <div class="flex gap-2">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-medium flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Filter
+                </button>
+                <a href="{{ route('admin.presensi.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded font-medium">
+                    Reset
+                </a>
+            </div>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select name="status" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <option value="">Semua Status</option>
-                <option value="hadir" {{ request('status') == 'hadir' ? 'selected' : '' }}>Hadir</option>
-                <option value="tidak_hadir" {{ request('status') == 'tidak_hadir' ? 'selected' : '' }}>Tidak Hadir</option>
-                <option value="izin" {{ request('status') == 'izin' ? 'selected' : '' }}>Izin</option>
-                <option value="sakit" {{ request('status') == 'sakit' ? 'selected' : '' }}>Sakit</option>
-            </select>
-        </div>
+        <!-- Active Filters Display -->
+        @if(request()->hasAny(['search', 'kelas_id', 'status', 'approval_status']))
+        <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
+            <span class="text-sm text-gray-600 font-medium">Filter Aktif:</span>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Approval</label>
-            <select name="approval_status" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <option value="">Semua</option>
-                <option value="pending" {{ request('approval_status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="approved" {{ request('approval_status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                <option value="rejected" {{ request('approval_status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
-            </select>
-        </div>
+            @if(request('search'))
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                Pencarian: "{{ request('search') }}"
+                <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" class="hover:text-blue-900">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </a>
+            </span>
+            @endif
 
-        <div class="flex items-end">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mr-2">
-                Filter
-            </button>
-            <a href="{{ route('admin.presensi.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
-                Reset
-            </a>
+            @if(request('kelas_id'))
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">
+                Kelas: {{ $kelas->find(request('kelas_id'))->nama_kelas ?? '' }}
+                <a href="{{ request()->fullUrlWithQuery(['kelas_id' => null]) }}" class="hover:text-purple-900">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </a>
+            </span>
+            @endif
+
+            @if(request('status'))
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
+                Status: {{ ucfirst(str_replace('_', ' ', request('status'))) }}
+                <a href="{{ request()->fullUrlWithQuery(['status' => null]) }}" class="hover:text-green-900">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </a>
+            </span>
+            @endif
+
+            @if(request('approval_status'))
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full">
+                Approval: {{ ucfirst(request('approval_status')) }}
+                <a href="{{ request()->fullUrlWithQuery(['approval_status' => null]) }}" class="hover:text-yellow-900">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </a>
+            </span>
+            @endif
         </div>
+        @endif
     </form>
 </div>
 
@@ -242,7 +316,13 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
             </svg>
             <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data presensi</h3>
-            <p class="text-gray-500">Tidak ada data presensi untuk filter yang dipilih</p>
+            <p class="text-gray-500">
+                @if(request()->hasAny(['search', 'kelas_id', 'status', 'approval_status']))
+                    Tidak ada data yang sesuai dengan filter yang dipilih
+                @else
+                    Tidak ada data presensi untuk hari ini
+                @endif
+            </p>
         </div>
     @endif
 </div>
@@ -352,66 +432,6 @@ async function confirmQuickApprove() {
         if (data.success) {
             showAlert('success', data.message);
             closeQuickApproveModal();
-
-            // Update row approval status
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
-        } else {
-            showAlert('error', data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('error', 'Terjadi kesalahan saat memproses persetujuan');
-    }
-}
-
-// Quick Reject Functions
-function quickReject(id, name, tipe) {
-    currentPresensiId = id;
-    document.getElementById('quickRejectName').textContent = name;
-    document.getElementById('quickRejectTipe').textContent = tipe;
-    document.getElementById('quickAlasanPenolakan').value = '';
-    document.getElementById('quickRejectError').classList.add('hidden');
-    document.getElementById('quickRejectModal').classList.remove('hidden');
-}
-
-function closeQuickRejectModal() {
-    document.getElementById('quickRejectModal').classList.add('hidden');
-    currentPresensiId = null;
-}
-
-async function confirmQuickReject() {
-    if (!currentPresensiId) return;
-
-    const alasan = document.getElementById('quickAlasanPenolakan').value.trim();
-    const errorEl = document.getElementById('quickRejectError');
-
-    if (alasan.length < 10) {
-        errorEl.textContent = 'Alasan penolakan minimal 10 karakter';
-        errorEl.classList.remove('hidden');
-        return;
-    }
-
-    errorEl.classList.add('hidden');
-
-    try {
-        const response = await fetch(`/admin/presensi/${currentPresensiId}/reject`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content || '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                alasan_penolakan: alasan
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            showAlert('success', data.message);
-            closeQuickRejectModal();
 
             setTimeout(() => {
                 location.reload();
